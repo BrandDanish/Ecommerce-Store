@@ -26,7 +26,7 @@ const handleLogout = async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("isLoggedIn");
     window.dispatchEvent(new Event("storage"));
-    navigate("/");
+    navigate("login");
   } catch (error) {
     console.error("Logout failed:", error);
   }
@@ -134,6 +134,7 @@ const handleLogout = async () => {
                         setIsLoggedIn(false);
                         setIsOpen(false);
                         {handleLogout}
+                        navigate("/login")
                       }}
                     >
                       Logout
@@ -147,6 +148,5 @@ const handleLogout = async () => {
       </div>
     </header>
   );
-};
-
+}
 export default Header;

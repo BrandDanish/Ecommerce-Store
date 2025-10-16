@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { useWishlist } from "../../context/Whishlist";
 import { useCart } from "../../context/CartContext";
+import Skeleton from "../skeleton/Skeleton";
 const SellingProduct = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ const SellingProduct = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center py-10">Loading products...</p>;
+    return <p className="text-center py-10"><Skeleton/></p>;
   }
 
   return (
@@ -75,17 +76,14 @@ function ProductCard({ product, selectedProductId, setSelectedProductId }) {
 
   return (
     <div
-      onClick={() => setSelectedProductId(product.id)} 
-      className={`relative w-[250px] p-4 transition-transform duration-500 flex flex-col items-center cursor-pointer`}
+      className={`relative group w-[250px] p-4 transition duration-300 flex flex-col items-center border rounded-lg hover:shadow-lg`}
     >
       <Link to={`/product/${product.id}`}>
-      <div className="relative bg-gray-300 w-[190px] h-[220px] flex items-center justify-center">
+      <div className="relative bg-gray-200 w-[190px] h-[220px] flex items-center justify-center rounded-lg overflow-hidden">
         {/* Discount Badge */}
         <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
           -{discount}%
         </span>
-
-        {/* Wishlist + Eye Icons */}
         <div className="absolute top-2 right-2 flex flex-col gap-2">
           <img
             src="/Icons/Fill Heart.png"
@@ -113,19 +111,16 @@ function ProductCard({ product, selectedProductId, setSelectedProductId }) {
         />
       </div>
    </Link>
-      {/* ✅ Add To Cart only for clicked product */}
-      {selectedProductId === product.id && (
+      
         <button
           onClick={(e) => {
             e.stopPropagation();
             addToCart(product);
           }}
-          className="bg-black text-white py-2 w-[190px] cursor-pointer hover:bg-green-600"
+          className="absolute bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 translate-y-full group-hover:translate-y-0 transition-all duration-300"
         >
           Add To Cart
         </button>
-      )}
-
       <h3 className="mt-4 text-sm font-medium text-center">{product.title}</h3>
       <div className="flex gap-2 mt-2">
         <span className="text-red-500 font-bold">${product.price}</span>

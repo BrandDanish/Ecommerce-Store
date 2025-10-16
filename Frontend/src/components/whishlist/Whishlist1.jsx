@@ -111,7 +111,11 @@ function ProductCard({ product, triggerPopup }) {
   const { addToCart } = useCart();
 
   const handleClick = () => {
-    addToCart(product); // add product to cart
+    addToCart({price:product.price,
+      id: product.id,
+      name: product.title,
+      image: product.image,
+    }); // add product to cart
     setClicked(true); // change button color
     triggerPopup("✅ Successfully Added the Product to Cart");
 
@@ -146,8 +150,6 @@ function ProductCard({ product, triggerPopup }) {
           alt={product.name}
           className="w-[140px] h-[140px] object-contain"
         />
-
-        {/* ✅ Add to Cart Button */}
         <button
           className={`absolute bottom-0 left-0 right-0 py-2 flex items-center justify-center gap-2 
             ${clicked ? "bg-green-600" : "bg-black"} text-white transition`}

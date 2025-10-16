@@ -5,20 +5,20 @@ import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import RelatedProduct from "./RelatedProduct";
 import { useCart } from "../../context/CartContext";
-
+import { toast } from "react-toastify";
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { cart, addToCart, updateQuantity } = useCart();
+
   const [selectedColor, setSelectedColor] = useState("white");
   const [selectedSize, setSelectedSize] = useState("M");
-  const [quantity, setQuantity] = useState(1);
+  const [qty, setQty] = useState(1);
   const [wishlist, setWishlist] = useState(false);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mainImage, setMainImage] = useState("");
 
-  // ✅ Fetch product by ID
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -26,7 +26,7 @@ const ProductDetail = () => {
         if (!res.ok) throw new Error("Failed to fetch product");
         const data = await res.json();
         setProduct(data);
-        setMainImage(data.image); // ✅ set main image
+        setMainImage(data.image);
       } catch (err) {
         console.error("Error fetching product:", err);
       } finally {
@@ -42,18 +42,72 @@ const ProductDetail = () => {
   const productImages = [product.image, product.image, product.image, product.image];
 
   const handleQtyChange = (type) => {
-    if (type === "inc") setQuantity((prev) => prev + 1);
-    if (type === "dec" && quantity > 1) setQuantity((prev) => prev - 1);
+    setQty((prev) => (type === "inc" ? prev + 1 : prev > 1 ? prev - 1 : 1));
   };
 
   const handleBuyNow = () => {
-    addToCart({
-      ...product,
-      quantity,
-      color: selectedColor,
-      size: selectedSize,
-    });
-    navigate("/cart");
+    const existing = cart.find(
+      (item) =>
+        item.id === product.id &&
+        item.color === selectedColor &&
+        item.size === selectedSize
+    );
+
+    if (existing) {
+      updateQuantity(product.id, selectedColor, selectedSize, existing.qty + qty);
+      
+    } else {
+      addToCart({
+        id: product.id,
+        name: product.title,
+        price: product.price,
+        image: product.image,
+        qty: qty,
+        color: selectedColor,
+        size: selectedSize,
+      });
+    }
+    toast.dismiss();
+    toast(
+    ({ closeToast }) => (
+      <div
+        className="relative flex flex-col items-center justify-center text-center
+        bg-white text-gray-800 px-8 py-6 rounded-2xl shadow-2xl border border-gray-200
+        w-[350px] mx-auto"
+      >
+        <h3 className="text-lg font-semibold mb-2">
+          ✅ {product.title} added to cart!
+        </h3>
+        <p className="text-sm mb-4 text-gray-600">
+          Your item has been successfully added.
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => {
+              closeToast();
+              navigate("/cart");
+            }}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium"
+          >
+            View Cart
+          </button>
+          <button
+            onClick={closeToast}
+            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    ),
+    {
+      position: "top-center",
+      autoClose: false,
+      closeButton: false,
+      className: "custom-toast-modal",
+      style: { background: "transparent", boxShadow: "none" },
+    }
+  );
   };
 
   return (
@@ -62,9 +116,8 @@ const ProductDetail = () => {
       <Header />
 
       <div className="flex flex-col lg:flex-row gap-10 px-8 py-10 justify-center items-center">
-        {/* Left - Images */}
+        {/* Left Section */}
         <div className="flex gap-6 w-full lg:w-1/2">
-          {/* Thumbnails */}
           <div className="flex flex-col gap-8 pl-[135px]">
             {productImages.map((img, index) => (
               <img
@@ -72,14 +125,13 @@ const ProductDetail = () => {
                 src={img}
                 alt="thumbnail"
                 className={`w-20 h-20 object-contain cursor-pointer border rounded-lg bg-gray-300 ${
-                  mainImage === img ? "gray-red-500" : "border-gray-300"
+                  mainImage === img ? "border-red-500" : "border-gray-300"
                 }`}
                 onClick={() => setMainImage(img)}
               />
             ))}
           </div>
 
-          {/* Main Image */}
           <div className="flex-1 flex items-center justify-center border rounded-lg bg-gray-300">
             <img
               src={mainImage}
@@ -89,7 +141,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Right - Product Info */}
+        {/* Right Section */}
         <div className="space-y-2 w-[500px] h-[600px] pt-[88px]">
           <h2 className="text-2xl font-semibold">{product.title}</h2>
           <p className="text-yellow-500">
@@ -97,40 +149,40 @@ const ProductDetail = () => {
             <span className="text-green-600">In Stock</span>
           </p>
           <p className="text-2xl font-bold">${product.price}</p>
-
           <p className="text-gray-600">{product.description}</p>
 
-          {/* Colors */}
-          <div className="flex items-center gap-3">
-            <span className="font-medium">Colours:</span>
-            {["white", "black", "red"].map((color) => (
-              <button
-                key={color}
-                onClick={() => setSelectedColor(color)}
-                className={`w-6 h-6 rounded-full border-2 ${
-                  selectedColor === color ? "border-red-600" : "border-gray-300"
-                }`}
-                style={{ backgroundColor: color }}
-              />
-            ))}
-          </div>
+          {/* Colors Inline with Sizes */}
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-medium">Colors:</span>
+              {["white", "black", "red"].map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                  className={`w-6 h-6 rounded-full border-2 ${
+                    selectedColor === color ? "border-red-600" : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
 
-          {/* Sizes */}
-          <div className="flex items-center gap-3">
-            <span className="font-medium">Size:</span>
-            {["XS", "S", "M", "L", "XL"].map((size) => (
-              <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`px-3 py-1 border rounded-md ${
-                  selectedSize === size
-                    ? "bg-red-600 text-white"
-                    : "bg-white text-gray-700 border-gray-300"
-                }`}
-              >
-                {size}
-              </button>
-            ))}
+            <div className="flex items-center gap-2">
+              <span className="font-medium">Size:</span>
+              {["XS", "S", "M", "L", "XL"].map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`px-3 py-1 border rounded-md ${
+                    selectedSize === size
+                      ? "bg-red-600 text-white"
+                      : "bg-white text-gray-700 border-gray-300"
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Quantity + Buy Now */}
@@ -142,7 +194,7 @@ const ProductDetail = () => {
               >
                 -
               </button>
-              <span className="px-4">{quantity}</span>
+              <span className="px-4">{qty}</span>
               <button
                 onClick={() => handleQtyChange("inc")}
                 className="px-3 py-2 text-lg font-bold hover:bg-red-500 border"
@@ -155,47 +207,11 @@ const ProductDetail = () => {
               onClick={handleBuyNow}
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg"
             >
-              Buy Now
+              Add to Cart
             </button>
-
-            {/* Wishlist */}
-            <button
-              onClick={() => setWishlist(!wishlist)}
-              className="border w-[40px] h-[40px]"
-            >
-              {wishlist ? (
-                <span className="text-red-600 text-2xl">♥</span>
-              ) : (
-                <span className="text-gray-400 text-2xl">♡</span>
-              )}
-            </button>
-          </div>
-
-          {/* Delivery & Return */}
-          <div className="border rounded-md p-4 space-y-1 w-[399px]">
-            <div className="flex items-center gap-2">
-              <img src="/Icons/icon-delivery.png" alt="delivery" />
-              <span className="text-gray-500">
-                Enter your postal code for{" "}
-                <a href="/availability" className="text-blue-600 hover:underline">
-                  availability
-                </a>
-              </span>
-            </div>
-            <div className="border"></div>
-            <div className="flex items-center gap-2">
-              <img src="/Icons/Icon-return.png" alt="return" />
-              <span className="text-gray-500">
-                Free 30 Days Delivery Returns,{" "}
-                <a href="/Details" className=" text-blue-500 hover:underline">
-                  Details
-                </a>
-              </span>
-            </div>
           </div>
         </div>
       </div>
-
       <RelatedProduct />
       <Footer />
     </>

@@ -3,10 +3,10 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../../context/Whishlist";
 import { useCart } from "../../context/CartContext";
+import Skeleton from "../skeleton/Skeleton";
 
 const ExploreProduct = () => {
   const [products, setProducts] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [popup, setPopup] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,16 +26,6 @@ const ExploreProduct = () => {
     fetchProducts();
   }, []);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % products.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? products.length - 1 : prev - 1
-    );
-  };
-
   // Auto close popup after 3 seconds
   useEffect(() => {
     if (popup) {
@@ -45,7 +35,11 @@ const ExploreProduct = () => {
   }, [popup]);
 
   if (loading) {
-    return <p className="text-center py-10">Loading products...</p>;
+    return (
+      <p className="text-center py-10">
+        <Skeleton />
+      </p>
+    );
   }
 
   return (
@@ -67,52 +61,34 @@ const ExploreProduct = () => {
             </h2>
           </div>
         </div>
-        {/* Arrows */}
-        <div className="flex gap-2">
-          <img
-            src="/Icons/Fill With Left Arrow.png"
-            onClick={prevSlide}
-            className="w-10 h-10 rounded-full bg-gray-200 cursor-pointer"
-          />
-          <img
-            src="/Icons/Right Arrow.png"
-            onClick={nextSlide}
-            className="w-10 h-10 rounded-full bg-gray-200 cursor-pointer"
-          />
-        </div>
       </div>
 
       {/* Products Grid */}
       <div className="grid grid-cols-4 gap-6 mt-6 rounded-lg py-8">
-        {products.map((product, index) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            active={index === currentIndex}
-            setPopup={setPopup}
-          />
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} setPopup={setPopup} />
         ))}
       </div>
 
       {/* View All */}
       <div className="flex justify-center mt-8">
-        <Link to='/shop'>
-        <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium">
-          View All Products
-        </button>
+        <Link to="/shop">
+          <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium">
+            View All Products
+          </button>
         </Link>
       </div>
     </div>
   );
 };
 
-function ProductCard({ product, active, setPopup }) {
+function ProductCard({ product, setPopup }) {
   const { addToWishlist } = useWishlist();
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
     addToCart(product);
-    setPopup(product.title); // ✅ API uses "title"
+    setPopup(product.title);
   };
 
   // Fake discount + old price
@@ -122,51 +98,62 @@ function ProductCard({ product, active, setPopup }) {
   const reviews = product.rating?.count || 50;
 
   return (
-    <div
-      className={`relative w-[250px] p-4 transition-transform duration-500 flex flex-col items-center ${
-        active ? "opacity-100" : "opacity-100"
-      }`}
-    >   
-     <Link to={`/product/${product.id}`}>
-      <div className="relative bg-gray-300 w-[190px] h-[220px] flex items-center justify-center">
-        {/* Discount */}
-        <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-          -{discount}%
-        </span>
-        {/* Wishlist + Eye */}
-        <div className="absolute top-2 right-2 flex flex-col gap-2">
-          <img
-            src="/Icons/Fill Heart.png"
-            alt="Wishlist"
-            className="w-6 h-6 cursor-pointer hover:scale-110 transition"
-            onClick={() => addToWishlist(product)}
-          />
-          <Link to={`/product/${product.id}`}>
-            <img
-              src="/Icons/Fill Eye.png"
-              alt="View"
-              className="w-6 h-6 cursor-pointer hover:scale-110 transition"
-            />
-          </Link>
-        </div>
-        
-        <img
-          src={product.image}
-          alt={product.title}
-          className="w-[140px] h-[140px] object-contain"
-        />
-      </div>
-</Link>
-      {/* Add to Cart */}
-      {active && (
-        <button
-          onClick={handleAddToCart}
-          className="bg-black text-white py-2 w-[190px] hover:bg-gray-800"
-        >
-          Add To Cart
-        </button>
-      )}
+    <div className="relative w-[250px] p-4 flex flex-col items-center transition-transform duration-300 group hover:shadow-lg">
+      <Link to={`/product/${product.id}`}>
+        <div className="relative bg-gray-300 w-[190px] h-[220px] flex items-center justify-center rounded-lg overflow-hidden">
+          {/* Discount */}
+          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+            -{discount}%
+          </span>
 
+          {/* Wishlist + Eye */}
+          <div className="absolute top-2 right-2 flex flex-col gap-2">
+            <img
+              src="/Icons/Fill Heart.png"
+              alt="Wishlist"
+              className="w-6 h-6 cursor-pointer hover:scale-110 transition"
+              onClick={(e) => {
+                e.preventDefault();
+                addToWishlist(product);
+              }}
+            />
+            <Link to={`/product/${product.id}`}>
+              <img
+                src="/Icons/Fill Eye.png"
+                alt="View"
+                className="w-6 h-6 cursor-pointer hover:scale-110 transition"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </Link>
+          </div>
+
+          {/* Product Image */}
+          <img
+            src={product.image}
+            alt={product.title}
+            className="w-[140px] h-[140px] object-contain"
+          />
+
+          {/* Add to Cart Button on Hover */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleAddToCart();
+            }}
+            className="
+              absolute bottom-0 left-0 w-full py-2
+              bg-black text-white text-sm font-medium
+              opacity-0 translate-y-full
+              group-hover:opacity-100 group-hover:translate-y-0
+              transition-all duration-300
+            "
+          >
+            Add To Cart
+          </button>
+        </div>
+      </Link>
+
+      {/* Info */}
       <h3 className="mt-4 text-sm font-medium text-center">{product.title}</h3>
       <div className="flex gap-2 mt-2">
         <span className="text-red-500 font-bold">${product.price}</span>
@@ -174,6 +161,7 @@ function ProductCard({ product, active, setPopup }) {
           ${oldPrice.toFixed(2)}
         </span>
       </div>
+
       <div className="flex items-center gap-1 text-yellow-500 text-sm mt-2">
         {Array(rating)
           .fill(0)

@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Skeleton from "../skeleton/Skeleton";
 
 const Category = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2500); // 2.5 seconds
+    return () => clearTimeout(timer);
+  }, []);
 
   const categories = [
     { name: "iPhone", icon: "/Icons/Category-CellPhone.png" },
@@ -11,14 +18,14 @@ const Category = () => {
     { name: "Headphones", icon: "/Icons/Category-CellPhone.png" },
     { name: "Gaming", icon: "/Icons/Category-CellPhone.png" },
   ];
-  const total=categories.length
-  const VisibleProduct=[
+  const total = categories.length;
+  const VisibleProduct = [
     categories[currentIndex],
-    categories[(currentIndex+1)%total],
-    categories[(currentIndex+2)%total],
-    categories[(currentIndex+3)%total],
-    categories[(currentIndex+4)%total]
-  ]
+    categories[(currentIndex + 1) % total],
+    categories[(currentIndex + 2) % total],
+    categories[(currentIndex + 3) % total],
+    categories[(currentIndex + 4) % total],
+  ];
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % categories.length);
@@ -58,27 +65,31 @@ const Category = () => {
 
       {/* Category Boxes */}
       <div className="flex flex-row gap-6 items-center justify-center mt-[50px]">
-        {VisibleProduct.map((cat, index) => (
-          <div
-            key={index}
-            className={`w-[135px] h-[135px] border rounded-lg p-4 flex flex-col items-center justify-center transition-all duration-300 ${
-              index === currentIndex
-                ? "bg-red-500 text-white border-red-500"
-                : "bg-white border-gray-300"
-            }`}
-          >
-            <img
-              src={cat.icon}
-              className="w-[50px] h-[50px] mb-2"
-              alt={cat.name}
-            />
-            <span>{cat.name}</span>
-          </div>
-        ))}
+        {loading
+          ? Array(5)
+              .fill(0)
+              .map((_, idx) => (
+                <Skeleton key={idx} width={135} height={135} />
+              ))
+          : VisibleProduct.map((cat, index) => (
+              <div
+                key={index}
+                className={`w-[135px] h-[135px] border rounded-lg p-4 flex flex-col items-center justify-center transition-all duration-300 ${
+                  index === currentIndex
+                    ? "bg-red-500 text-white border-red-500"
+                    : "bg-white border-gray-300"
+                }`}
+              >
+                <img
+                  src={cat.icon}
+                  className="w-[50px] h-[50px] mb-2"
+                  alt={cat.name}
+                />
+                <span>{cat.name}</span>
+              </div>
+            ))}
       </div>
-      <div className=" border-gray-300 border-t w-full mt-10">
-
-      </div>
+      <div className=" border-gray-300 border-t w-full mt-10"></div>
     </div>
   );
 };

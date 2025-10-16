@@ -10,6 +10,7 @@ const Checkout = () => {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -35,6 +36,7 @@ const Checkout = () => {
     paymentMethod: "Cash on Delivery",
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -44,21 +46,21 @@ const Checkout = () => {
   // ✅ Handle input
   const handleChange = (e) => {
     setBilling({ ...billing, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" }); // clear error when user types
   };
 
-  // ✅ Validate Billing Details
+  // ✅ Inline Validation
   const validateBilling = () => {
-    if (
-      !billing.firstName ||
-      !billing.streetAddress ||
-      !billing.city ||
-      !billing.phone ||
-      !billing.email
-    ) {
-      setMessage("⚠️ Please fill in all required billing details!");
-      return false;
-    }
-    return true;
+    const newErrors = {};
+    if (!billing.firstName.trim()) newErrors.firstName = "First name is required.";
+    if (!billing.streetAddress.trim()) newErrors.streetAddress = "Street address is required.";
+    if (!billing.city.trim()) newErrors.city = "City is required.";
+    if (!billing.phone.trim()) newErrors.phone = "Phone number is required.";
+    if (!billing.email.trim()) newErrors.email = "Email address is required.";
+    else if (!/\S+@\S+\.\S+/.test(billing.email)) newErrors.email = "Enter a valid email.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   // ✅ Handle order placement
@@ -70,10 +72,11 @@ const Checkout = () => {
       return;
     }
 
-    // 🔹 Check Billing
-    if (!validateBilling()) return;
+    if (!validateBilling()) {
+      setMessage("⚠️ Please fix the highlighted errors.");
+      return;
+    }
 
-    // 🔹 Check if user is logged in
     if (!user?.id) {
       setMessage("⚠️ Please log in before placing an order.");
       return;
@@ -84,7 +87,7 @@ const Checkout = () => {
 
     try {
       const orderData = {
-        userId: user.id, // ✅ dynamic userId
+        userId: user.id,
         items: cart.map((item) => ({
           productId: item.id,
           name: item.name,
@@ -112,11 +115,11 @@ const Checkout = () => {
       );
 
       if (res.data.success) {
-        setMessage("Order placed successfully!");
+        setMessage("✅ Order placed successfully!");
         clearCart();
         setTimeout(() => navigate("/"), 2000);
       } else {
-        setMessage("Failed to place order. Try again.");
+        setMessage("❌ Failed to place order. Try again.");
       }
     } catch (error) {
       console.error("Place order error:", error);
@@ -144,6 +147,7 @@ const Checkout = () => {
         <div className="w-1/2">
           <h2 className="text-xl font-semibold mb-6">Billing Details</h2>
           <form className="flex flex-col gap-5" onSubmit={handlePlaceOrder}>
+            {/* First Name */}
             <div className="flex flex-col w-[470px]">
               <label className="mb-1 text-gray-700">
                 First Name <span className="text-red-500">*</span>
@@ -153,11 +157,16 @@ const Checkout = () => {
                 name="firstName"
                 value={billing.firstName}
                 onChange={handleChange}
-                className="bg-gray-100 p-3"
-                required
+                className={`bg-gray-100 p-3 border ${
+                  errors.firstName ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+              )}
             </div>
 
+            {/* Company Name */}
             <div className="flex flex-col w-[470px]">
               <label className="mb-1 text-gray-700">Company Name</label>
               <input
@@ -165,10 +174,11 @@ const Checkout = () => {
                 name="companyName"
                 value={billing.companyName}
                 onChange={handleChange}
-                className="bg-gray-100 p-3 w-full"
+                className="bg-gray-100 p-3 border border-gray-300"
               />
             </div>
 
+            {/* Street Address */}
             <div className="flex flex-col w-[470px]">
               <label className="mb-1 text-gray-700">
                 Street Address <span className="text-red-500">*</span>
@@ -178,11 +188,16 @@ const Checkout = () => {
                 name="streetAddress"
                 value={billing.streetAddress}
                 onChange={handleChange}
-                className="bg-gray-100 p-3 w-full"
-                required
+                className={`bg-gray-100 p-3 border ${
+                  errors.streetAddress ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {errors.streetAddress && (
+                <p className="text-red-500 text-sm mt-1">{errors.streetAddress}</p>
+              )}
             </div>
 
+            {/* Apartment */}
             <div className="flex flex-col w-[470px]">
               <label className="mb-1 text-gray-700">
                 Apartment, floor, etc. (optional)
@@ -192,10 +207,11 @@ const Checkout = () => {
                 name="apartment"
                 value={billing.apartment}
                 onChange={handleChange}
-                className="bg-gray-100 p-3 w-full"
+                className="bg-gray-100 p-3 border border-gray-300"
               />
             </div>
 
+            {/* City */}
             <div className="flex flex-col w-[470px]">
               <label className="mb-1 text-gray-700">
                 Town/City <span className="text-red-500">*</span>
@@ -205,11 +221,16 @@ const Checkout = () => {
                 name="city"
                 value={billing.city}
                 onChange={handleChange}
-                className="bg-gray-100 p-3 w-full"
-                required
+                className={`bg-gray-100 p-3 border ${
+                  errors.city ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {errors.city && (
+                <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+              )}
             </div>
 
+            {/* Phone */}
             <div className="flex flex-col w-[470px]">
               <label className="mb-1 text-gray-700">
                 Phone Number <span className="text-red-500">*</span>
@@ -219,11 +240,16 @@ const Checkout = () => {
                 name="phone"
                 value={billing.phone}
                 onChange={handleChange}
-                className="bg-gray-100 p-3 w-full"
-                required
+                className={`bg-gray-100 p-3 border ${
+                  errors.phone ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {errors.phone && (
+                <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+              )}
             </div>
 
+            {/* Email */}
             <div className="flex flex-col w-[470px]">
               <label className="mb-1 text-gray-700">
                 Email Address <span className="text-red-500">*</span>
@@ -233,9 +259,13 @@ const Checkout = () => {
                 name="email"
                 value={billing.email}
                 onChange={handleChange}
-                className="bg-gray-100 p-3 w-full"
-                required
+                className={`bg-gray-100 p-3 border ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
           </form>
         </div>
@@ -305,7 +335,7 @@ const Checkout = () => {
           <button
             onClick={handlePlaceOrder}
             disabled={loading}
-            className="bg-red-500 text-white w-full py-3 mt-2 rounded-md"
+            className="bg-red-500 text-white w-full py-3 mt-2 rounded-md hover:bg-red-600 transition"
           >
             {loading ? "Placing Order..." : "Place Order"}
           </button>

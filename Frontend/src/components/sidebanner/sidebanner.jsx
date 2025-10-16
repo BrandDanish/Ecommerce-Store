@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import Skeleton from "../skeleton/Skeleton";
 const SideBanner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("men's clothing");
+  const [loading, setLoading] = useState(true);
 
   // Fetch all products once
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error("Error fetching products:", err));
+      .then((data) => {setProducts(data);
+       setLoading(false); // ✅ stop loading after data is fetched
+      })
+      .catch((err) => {
+        console.error("Error fetching products:", err);
+        setLoading(false);
+      });
   }, []);
 
   // Filter products when category changes
@@ -47,7 +53,9 @@ const SideBanner = () => {
             <li
               onClick={() => setSelectedCategory("women's clothing")}
               className={`whitespace-nowrap flex items-center justify-between cursor-pointer hover:text-red-500 ${
-                selectedCategory === "women's clothing" ? "text-red-500 font-semibold" : ""
+                selectedCategory === "women's clothing"
+                  ? "text-red-500 font-semibold"
+                  : ""
               }`}
             >
               Women's Fashion
@@ -57,7 +65,9 @@ const SideBanner = () => {
             <li
               onClick={() => setSelectedCategory("men's clothing")}
               className={`whitespace-nowrap flex items-center justify-between cursor-pointer hover:text-red-500 ${
-                selectedCategory === "men's clothing" ? "text-red-500 font-semibold" : ""
+                selectedCategory === "men's clothing"
+                  ? "text-red-500 font-semibold"
+                  : ""
               }`}
             >
               Men's Fashion
@@ -77,7 +87,8 @@ const SideBanner = () => {
         {/* Banner Carousel */}
         <div className="flex-1 p-4 ml-4">
           <div className="relative overflow-hidden w-[892px] h-[344px] rounded-xl">
-            {filtered.length > 0 ? (
+            {loading ? ( <Skeleton/>
+            ) : filtered.length > 0 ? (
               <>
                 {/* Slide Wrapper */}
                 <div
@@ -136,7 +147,7 @@ const SideBanner = () => {
               </>
             ) : (
               <p className="text-center mt-24 text-gray-500">
-                Loading products...
+                No products found.
               </p>
             )}
           </div>

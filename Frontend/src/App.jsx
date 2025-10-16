@@ -1,7 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import TopHeader from './components/header/TopHeader'
-import Header from './components/header/Header'
-import Footer from './components/footer/Footer'
+import { ToastContainer } from 'react-toastify'
 import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import UserLog from './components/user/UserLog'
@@ -31,6 +29,15 @@ const App = () => {
         <Route path='/shop' element={<AllProducts/>}/>
         <Route path='/login' element={<UserLog/>}/>
       </Routes>
+      <ToastContainer
+        position="center"
+        closeOnClick={false}
+        draggable={false}
+        pauseOnHover
+        closeButton
+        newestOnTop
+        theme="colored"
+      />
     </Router>
   )
 }
