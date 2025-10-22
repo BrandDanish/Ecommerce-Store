@@ -3,6 +3,7 @@ import TopHeader from "../components/header/TopHeader";
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
 import axios from "axios";
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -11,18 +12,16 @@ const Contact = () => {
     message: "",
   });
 
-  // handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/contact`, formData);
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/api/contact`, formData);
       alert("Message sent successfully!");
-      setFormData({ name: "", email: "", phone: "", message: "" }); // reset form
+      setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {
       console.error(error);
       alert("Failed to send message. Try again later!");
@@ -34,93 +33,98 @@ const Contact = () => {
       <TopHeader />
       <Header />
 
-      <div className="min-h-screen flex justify-center items-start">
-        {/* Left Section */}
-        <div className="w-[300px] h-[400px] bg-red-100 flex flex-col justify-center p-12 mt-[150px] shadow-sm">
-          <div className="flex mt-4">
-            <img src="Icons/icons-phone.png" className="w-[40px] h-[40px]" />
-            <h3 className="px-3 mt-1 font-bold text-black">Call to us</h3>
-          </div>
-          <div className="text-black font-normal mt-4">
-            <p className="whitespace-nowrap">
-              We are available 24/7, days a week.
-            </p>
-            <p className="mt-2">Phone: +923019515989</p>
-          </div>
-          <div className="border-t bg-red-500 mt-4"></div>
-          <div className="flex mt-4">
-            <img src="Icons/icons-mail.png" className="w-[40px] h-[40px]" />
-            <h3 className="px-3 mt-1 font-bold text-black">Write to us</h3>
-          </div>
-          <div className="text-black font-normal">
-            <p className="mt-4">
-              Fill out our form and we will contact you within 24 hours
-            </p>
-            <p className="mt-4">Email: customer@exclusive.com</p>
-            <p className="mt-4">Email: support@exclusive.com</p>
-          </div>
-        </div>
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 py-20 px-6">
+        <div className="flex flex-col lg:flex-row w-full max-w-6xl gap-10">
+          {/* Left Section */}
+          <div className="bg-red-100 rounded-2xl shadow-md p-10 flex-1">
+            <div className="space-y-8">
+              {/* Call */}
+              <div>
+                <div className="flex items-center gap-3">
+                  <img
+                    src="Icons/icons-phone.png"
+                    className="w-[40px] h-[40px]"
+                  />
+                  <h3 className="font-bold text-lg text-black">Call to us</h3>
+                </div>
+                <p className="text-black mt-3">
+                  We are available 24/7, 7 days a week.
+                </p>
+                <p className="mt-2 text-black">Phone: +92 301 9515989</p>
+              </div>
 
-        {/* Right Section - Form */}
-        <div className="space-y-1 flex items-center justify-center w-[800px] h-[457px] mt-[150px]">
-          <form
-            onSubmit={handleSubmit}
-            className="w-[700px] h-[400px] bg-red-100 shadow-lg top-[323px] left-[505px] mt-[-50px] p-10"
-          >
-            <div className="flex gap-8 justify-center items-center mt-12">
-              <div className="mb-4">
+              <hr className="border-red-300" />
+
+              {/* Email */}
+              <div>
+                <div className="flex items-center gap-3">
+                  <img
+                    src="Icons/icons-mail.png"
+                    className="w-[40px] h-[40px]"
+                  />
+                  <h3 className="font-bold text-lg text-black">Write to us</h3>
+                </div>
+                <p className="mt-3 text-black">
+                  Fill out our form and we will contact you within 24 hours.
+                </p>
+                <p className="mt-2 text-black">Email: customer@exclusive.com</p>
+                <p className="mt-2 text-black">Email: support@exclusive.com</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Section - Form */}
+          <div className="bg-red-100 rounded-2xl shadow-md p-10 flex-1">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <input
                   type="text"
                   name="name"
                   placeholder="Your Name *"
-                  className="w-full border px-4 py-2 bg-gray-100 text-black"
+                  className="border px-4 py-2 bg-gray-100 text-black rounded w-full"
                   required
                   value={formData.name}
                   onChange={handleChange}
                 />
-              </div>
-              <div className="mb-4">
                 <input
                   type="email"
                   name="email"
                   placeholder="Your Email *"
-                  className="w-full border px-4 py-2 bg-gray-100 text-black"
+                  className="border px-4 py-2 bg-gray-100 text-black rounded w-full"
                   required
                   value={formData.email}
                   onChange={handleChange}
                 />
-              </div>
-              <div className="mb-4">
                 <input
                   type="number"
                   name="phone"
                   placeholder="Your Phone *"
-                  className="w-full border px-4 py-2 bg-gray-100 text-black"
+                  className="border px-4 py-2 bg-gray-100 text-black rounded w-full"
                   required
                   value={formData.phone}
                   onChange={handleChange}
                 />
               </div>
-            </div>
 
-            <div className="mb-4">
               <textarea
-                rows="4"
+                rows="5"
                 name="message"
                 placeholder="Your Message"
-                className="w-full border rounded-lg px-4 py-2 bg-gray-100"
+                className="w-full border rounded-lg px-4 py-3 bg-gray-100 text-black resize-none"
                 value={formData.message}
                 onChange={handleChange}
               ></textarea>
-            </div>
 
-            <button
-              type="submit"
-              className="bg-red-500 text-white px-2 rounded w-[215px] h-[56px] ml-[400px]"
-            >
-              Send Message
-            </button>
-          </form>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg w-[215px] h-[56px] transition-all duration-200"
+                >
+                  Send Message
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 

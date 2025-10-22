@@ -100,7 +100,7 @@ const UserSign = () => {
 
   if (showLogin) return <UserLog />;
   return (
-    <div className="flex min-h-screen mb-20">
+    <div className="flex min-h-screen mb-20 mt-20">
       {/* Left Section */}
       <div className="w-1/2 flex items-center justify-center">
         {loading ? (
