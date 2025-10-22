@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import TopHeader from "../header/TopHeader";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
-import { useCart } from "../../context/CartContext";
+import { useSelector, useDispatch } from "react-redux";
+import { clearCart as clearCartAction } from "../../redux/cartSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-  const { cart, clearCart } = useCart();
+  const cart = useSelector((state) => state.cart?.items || []);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
@@ -15,16 +17,13 @@ const Checkout = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        console.log("🧑 User Loaded:", parsedUser);
-        setUser(parsedUser);
+        setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error("Error parsing stored user:", error);
       }
     }
   }, []);
 
-  // ✅ Billing form state
   const [billing, setBilling] = useState({
     firstName: "",
     companyName: "",
@@ -40,16 +39,13 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // ✅ Calculate subtotal
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
 
-  // ✅ Handle input
   const handleChange = (e) => {
     setBilling({ ...billing, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); // clear error when user types
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  // ✅ Inline Validation
   const validateBilling = () => {
     const newErrors = {};
     if (!billing.firstName.trim()) newErrors.firstName = "First name is required.";
@@ -63,24 +59,12 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ✅ Handle order placement
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    if (cart.length === 0) {
-      setMessage("🛒 Your cart is empty!");
-      return;
-    }
-
-    if (!validateBilling()) {
-      setMessage("⚠️ Please fix the highlighted errors.");
-      return;
-    }
-
-    if (!user?.id) {
-      setMessage("⚠️ Please log in before placing an order.");
-      return;
-    }
+    if (cart.length === 0) return setMessage("🛒 Your cart is empty!");
+    if (!validateBilling()) return setMessage("⚠️ Please fix the highlighted errors.");
+    if (!user?.id) return setMessage("⚠️ Please log in before placing an order.");
 
     setLoading(true);
     setMessage("");
@@ -107,8 +91,6 @@ const Checkout = () => {
         paymentMethod: billing.paymentMethod,
       };
 
-      console.log("🛍 Sending Order Data:", orderData);
-
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/order/placeorder`,
         orderData
@@ -116,7 +98,7 @@ const Checkout = () => {
 
       if (res.data.success) {
         setMessage("✅ Order placed successfully!");
-        clearCart();
+        dispatch(clearCartAction());
         setTimeout(() => navigate("/"), 2000);
       } else {
         setMessage("❌ Failed to place order. Try again.");
@@ -129,157 +111,56 @@ const Checkout = () => {
     }
   };
 
-  if (user === null) {
-    return (
-      <div className="text-center py-10 text-gray-700">
-        Loading user information...
-      </div>
-    );
-  }
+  if (user === null)
+    return <div className="text-center py-10 text-gray-700">Loading user information...</div>;
 
   return (
     <>
       <TopHeader />
       <Header />
 
-      <div className="flex justify-center items-start gap-10 px-10 py-10">
+      <div className="flex flex-col lg:flex-row justify-center items-start gap-10 px-4 md:px-10 py-10">
         {/* Left Side - Billing Details */}
-        <div className="w-1/2">
+        <div className="w-full lg:w-1/2">
           <h2 className="text-xl font-semibold mb-6">Billing Details</h2>
           <form className="flex flex-col gap-5" onSubmit={handlePlaceOrder}>
-            {/* First Name */}
-            <div className="flex flex-col w-[470px]">
-              <label className="mb-1 text-gray-700">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={billing.firstName}
-                onChange={handleChange}
-                className={`bg-gray-100 p-3 border ${
-                  errors.firstName ? "border-red-500" : "border-gray-300"
-                }`}
-              />
-              {errors.firstName && (
-                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
-              )}
-            </div>
-
-            {/* Company Name */}
-            <div className="flex flex-col w-[470px]">
-              <label className="mb-1 text-gray-700">Company Name</label>
-              <input
-                type="text"
-                name="companyName"
-                value={billing.companyName}
-                onChange={handleChange}
-                className="bg-gray-100 p-3 border border-gray-300"
-              />
-            </div>
-
-            {/* Street Address */}
-            <div className="flex flex-col w-[470px]">
-              <label className="mb-1 text-gray-700">
-                Street Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="streetAddress"
-                value={billing.streetAddress}
-                onChange={handleChange}
-                className={`bg-gray-100 p-3 border ${
-                  errors.streetAddress ? "border-red-500" : "border-gray-300"
-                }`}
-              />
-              {errors.streetAddress && (
-                <p className="text-red-500 text-sm mt-1">{errors.streetAddress}</p>
-              )}
-            </div>
-
-            {/* Apartment */}
-            <div className="flex flex-col w-[470px]">
-              <label className="mb-1 text-gray-700">
-                Apartment, floor, etc. (optional)
-              </label>
-              <input
-                type="text"
-                name="apartment"
-                value={billing.apartment}
-                onChange={handleChange}
-                className="bg-gray-100 p-3 border border-gray-300"
-              />
-            </div>
-
-            {/* City */}
-            <div className="flex flex-col w-[470px]">
-              <label className="mb-1 text-gray-700">
-                Town/City <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="city"
-                value={billing.city}
-                onChange={handleChange}
-                className={`bg-gray-100 p-3 border ${
-                  errors.city ? "border-red-500" : "border-gray-300"
-                }`}
-              />
-              {errors.city && (
-                <p className="text-red-500 text-sm mt-1">{errors.city}</p>
-              )}
-            </div>
-
-            {/* Phone */}
-            <div className="flex flex-col w-[470px]">
-              <label className="mb-1 text-gray-700">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="phone"
-                value={billing.phone}
-                onChange={handleChange}
-                className={`bg-gray-100 p-3 border ${
-                  errors.phone ? "border-red-500" : "border-gray-300"
-                }`}
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-              )}
-            </div>
-
-            {/* Email */}
-            <div className="flex flex-col w-[470px]">
-              <label className="mb-1 text-gray-700">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={billing.email}
-                onChange={handleChange}
-                className={`bg-gray-100 p-3 border ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                }`}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-              )}
-            </div>
+            {[
+              { label: "First Name", name: "firstName", required: true },
+              { label: "Company Name", name: "companyName" },
+              { label: "Street Address", name: "streetAddress", required: true },
+              { label: "Apartment, floor, etc. (optional)", name: "apartment" },
+              { label: "Town/City", name: "city", required: true },
+              { label: "Phone Number", name: "phone", required: true },
+              { label: "Email Address", name: "email", required: true, type: "email" },
+            ].map(({ label, name, required, type = "text" }) => (
+              <div key={name} className="flex flex-col w-full max-w-md">
+                <label className="mb-1 text-gray-700">
+                  {label} {required && <span className="text-red-500">*</span>}
+                </label>
+                <input
+                  type={type}
+                  name={name}
+                  value={billing[name]}
+                  onChange={handleChange}
+                  className={`bg-gray-100 p-3 border rounded-md ${
+                    errors[name] ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors[name] && (
+                  <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
+                )}
+              </div>
+            ))}
           </form>
         </div>
 
         {/* Right Side - Order Summary */}
-        <div className="w-1/3 border p-6 rounded-md mt-[200px]">
+        <div className="w-full lg:w-1/3 border p-6 rounded-md mt-10 lg:mt-[200px]">
           {cart.length === 0 ? (
             <p className="text-gray-500">No products in cart.</p>
           ) : (
             cart.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between items-center mb-4"
-              >
+              <div key={item.id} className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
                   <img
                     src={item.image}
@@ -309,27 +190,18 @@ const Checkout = () => {
           </div>
 
           <div className="mb-4 space-y-3">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="Cash on Delivery"
-                checked={billing.paymentMethod === "Cash on Delivery"}
-                onChange={handleChange}
-              />
-              <span>Cash on Delivery</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="Bank"
-                checked={billing.paymentMethod === "Bank"}
-                onChange={handleChange}
-              />
-              <span>Bank Transfer</span>
-            </label>
+            {["Cash on Delivery", "Bank"].map((method) => (
+              <label key={method} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value={method}
+                  checked={billing.paymentMethod === method}
+                  onChange={handleChange}
+                />
+                <span>{method}</span>
+              </label>
+            ))}
           </div>
 
           <button
@@ -352,5 +224,4 @@ const Checkout = () => {
     </>
   );
 };
-
 export default Checkout;

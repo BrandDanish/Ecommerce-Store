@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+// adjust the import path to where your Redux action/slice is located
+import { addToCart } from "../../redux/cartSlice"; // <- change path as needed
 
 const MusicSection = () => {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Product object for this section
   const musicProduct = {
     id: 101, // unique ID
     name: "Music Speaker",
@@ -54,8 +55,8 @@ const MusicSection = () => {
 
   // Handle Buy Now
   const handleBuyNow = () => {
-    addToCart(musicProduct); 
-    navigate("/cart");       
+    dispatch(addToCart(musicProduct));
+    navigate("/cart");
   };
 
   return (

@@ -4,13 +4,15 @@ import TopHeader from "../header/TopHeader";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import RelatedProduct from "./RelatedProduct";
-import { useCart } from "../../context/CartContext";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, updateQuantity } from "../../redux/cartSlice";
 import { toast } from "react-toastify";
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { cart, addToCart, updateQuantity } = useCart();
-
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.items);
   const [selectedColor, setSelectedColor] = useState("white");
   const [selectedSize, setSelectedSize] = useState("M");
   const [qty, setQty] = useState(1);
@@ -54,60 +56,66 @@ const ProductDetail = () => {
     );
 
     if (existing) {
-      updateQuantity(product.id, selectedColor, selectedSize, existing.qty + qty);
-      
+      // dispatch updateQuantity action with payload (adjust to your slice's expected shape)
+      dispatch(
+        updateQuantity({
+          id: product.id,
+          color: selectedColor,
+          size: selectedSize,
+          qty: existing.qty + qty,
+        })
+      );
     } else {
-      addToCart({
-        id: product.id,
-        name: product.title,
-        price: product.price,
-        image: product.image,
-        qty: qty,
-        color: selectedColor,
-        size: selectedSize,
-      });
+      dispatch(
+        addToCart({
+          id: product.id,
+          name: product.title,
+          price: product.price,
+          image: product.image,
+          qty: qty,
+          color: selectedColor,
+          size: selectedSize,
+        })
+      );
     }
+
     toast.dismiss();
     toast(
-    ({ closeToast }) => (
-      <div
-        className="relative flex flex-col items-center justify-center text-center
+      ({ closeToast }) => (
+        <div
+          className="relative flex flex-col items-center justify-center text-center
         bg-white text-gray-800 px-8 py-6 rounded-2xl shadow-2xl border border-gray-200
         w-[350px] mx-auto"
-      >
-        <h3 className="text-lg font-semibold mb-2">
-          ✅ {product.title} added to cart!
-        </h3>
-        <p className="text-sm mb-4 text-gray-600">
-          Your item has been successfully added.
-        </p>
-        <div className="flex gap-3">
-          <button
-            onClick={() => {
-              closeToast();
-              navigate("/cart");
-            }}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium"
-          >
-            View Cart
-          </button>
-          <button
-            onClick={closeToast}
-            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
-          >
-            Close
-          </button>
+        >
+          <h3 className="text-lg font-semibold mb-2">✅ {product.title} added to cart!</h3>
+          <p className="text-sm mb-4 text-gray-600">Your item has been successfully added.</p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                closeToast();
+                navigate("/cart");
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium"
+            >
+              View Cart
+            </button>
+            <button
+              onClick={closeToast}
+              className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+            >
+              Close
+            </button>
+          </div>
         </div>
-      </div>
-    ),
-    {
-      position: "top-center",
-      autoClose: false,
-      closeButton: false,
-      className: "custom-toast-modal",
-      style: { background: "transparent", boxShadow: "none" },
-    }
-  );
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeButton: false,
+        className: "custom-toast-modal",
+        style: { background: "transparent", boxShadow: "none" },
+      }
+    );
   };
 
   return (
@@ -133,11 +141,7 @@ const ProductDetail = () => {
           </div>
 
           <div className="flex-1 flex items-center justify-center border rounded-lg bg-gray-300">
-            <img
-              src={mainImage}
-              alt={product.title}
-              className="w-[400px] h-[400px] object-contain"
-            />
+            <img src={mainImage} alt={product.title} className="w-[400px] h-[400px] object-contain" />
           </div>
         </div>
 
@@ -174,9 +178,7 @@ const ProductDetail = () => {
                   key={size}
                   onClick={() => setSelectedSize(size)}
                   className={`px-3 py-1 border rounded-md ${
-                    selectedSize === size
-                      ? "bg-red-600 text-white"
-                      : "bg-white text-gray-700 border-gray-300"
+                    selectedSize === size ? "bg-red-600 text-white" : "bg-white text-gray-700 border-gray-300"
                   }`}
                 >
                   {size}
@@ -188,25 +190,16 @@ const ProductDetail = () => {
           {/* Quantity + Buy Now */}
           <div className="flex items-center gap-4">
             <div className="flex items-center border">
-              <button
-                onClick={() => handleQtyChange("dec")}
-                className="px-3 py-2 text-lg font-bold hover:bg-gray-200 border"
-              >
+              <button onClick={() => handleQtyChange("dec")} className="px-3 py-2 text-lg font-bold hover:bg-gray-200 border">
                 -
               </button>
               <span className="px-4">{qty}</span>
-              <button
-                onClick={() => handleQtyChange("inc")}
-                className="px-3 py-2 text-lg font-bold hover:bg-red-500 border"
-              >
+              <button onClick={() => handleQtyChange("inc")} className="px-3 py-2 text-lg font-bold hover:bg-red-500 border">
                 +
               </button>
             </div>
 
-            <button
-              onClick={handleBuyNow}
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg"
-            >
+            <button onClick={handleBuyNow} className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg">
               Add to Cart
             </button>
           </div>

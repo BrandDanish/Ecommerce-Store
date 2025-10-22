@@ -1,16 +1,18 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
-import { useWishlist } from "../../context/Whishlist";
-import { useCart } from "../../context/CartContext";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+// adjust these import paths to match your project structure
+import { addToWishlist } from "../../redux/wishlistSlice";
+import { addToCart } from "../../redux/cartSlice";
 
 const RelatedProduct = () => {
-  const [product,setProducts]=useState([])
+  const [product, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedId, setSelectedId] = useState(null); 
-  useEffect(()=>{
+  const [selectedId, setSelectedId] = useState(null);
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch("https://fakestoreapi.com/products");
@@ -37,13 +39,13 @@ const RelatedProduct = () => {
 
     fetchProducts();
   }, []);
-  const total=product.length
-  const VisibleProduct=[
+  const total = product.length;
+  const VisibleProduct = [
     product[currentIndex],
-    product[(currentIndex+1)%total],
-    product[(currentIndex+2)%total],
-    product[(currentIndex+3)%total],
-  ]
+    product[(currentIndex + 1) % total],
+    product[(currentIndex + 2) % total],
+    product[(currentIndex + 3) % total],
+  ];
   if (loading) return <div className="text-center p-6">Loading products...</div>;
   if (error) return <div className="text-center text-red-500 p-6">{error}</div>;
   if (product.length === 0) return <div>No products available</div>;
@@ -77,8 +79,7 @@ const RelatedProduct = () => {
 
 // ✅ Subcomponent
 function ProductCard({ product, active, selected, onSelect }) {
-  const { addToWishlist } = useWishlist();
-  const { addtoCart } = useCart();
+  const dispatch = useDispatch();
 
   return (
     <div
@@ -101,16 +102,16 @@ function ProductCard({ product, active, selected, onSelect }) {
             className="w-6 h-6 cursor-pointer hover:scale-110 transition"
             onClick={(e) => {
               e.stopPropagation(); // prevent selecting card
-              addToWishlist(product);
+              dispatch(addToWishlist(product));
             }}
           />
           <Link to={`/product/${product.id}`}>
-          <img
-            src="/Icons/Fill Eye.png"
-            alt="View"
-            className="w-6 h-6 cursor-pointer hover:scale-110 transition"
-            onClick={(e) => e.stopPropagation()}
-          />
+            <img
+              src="/Icons/Fill Eye.png"
+              alt="View"
+              className="w-6 h-6 cursor-pointer hover:scale-110 transition"
+              onClick={(e) => e.stopPropagation()}
+            />
           </Link>
         </div>
 
@@ -126,7 +127,7 @@ function ProductCard({ product, active, selected, onSelect }) {
           className="mt-0.4 w-[190px] bg-black text-white py-2  hover:bg-gray-800 transition"
           onClick={(e) => {
             e.stopPropagation();
-            addtoCart(product);
+            dispatch(addToCart(product));
           }}
         >
           Add to Cart
@@ -150,5 +151,4 @@ function ProductCard({ product, active, selected, onSelect }) {
     </div>
   );
 }
-
 export default RelatedProduct;

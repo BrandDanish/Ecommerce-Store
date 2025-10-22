@@ -1,92 +1,80 @@
 import { useEffect, useState } from "react";
-import { Link, Meta, useLocation } from "react-router-dom";
-import { useWishlist } from "../../context/Whishlist";
-import { useCart } from "../../context/CartContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axios from "axios";
+import { FaBars, FaTimes } from "react-icons/fa";
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation(); // ✅ you imported but didn’t define
-  const { wishlist } = useWishlist();
-  const { cart } = useCart();
-  const navigate=useNavigate()
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const wishlist = useSelector(
+    (state) => state.wishlist?.items ?? state.wishlist ?? []
+  );
+  const cart = useSelector((state) => state.cart?.items ?? state.cart ?? []);
+
   useEffect(() => {
     const loginStatus = localStorage.getItem("IsLoggedIn");
-    if (loginStatus === "true") {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
+    setIsLoggedIn(loginStatus === "true");
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/logout`);
+      console.log(res.data.message);
+      localStorage.removeItem("token");
+      localStorage.removeItem("IsLoggedIn");
+      window.dispatchEvent(new Event("storage"));
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
-  }, []); 
-const handleLogout = async () => {
-  try {
-    const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/logout`);
-    console.log(res.data.message);
-    localStorage.removeItem("token");
-    localStorage.removeItem("isLoggedIn");
-    window.dispatchEvent(new Event("storage"));
-    navigate("login");
-  } catch (error) {
-    console.error("Logout failed:", error);
-  }
-};
+  };
+
   return (
-    <header className="bg-white top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <header className="bg-white shadow-sm top-0 z-50 w-full">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold text-gray-900 pl-[75px]">
+        <Link
+          to="/"
+          className="text-2xl font-bold text-gray-900 tracking-wide"
+        >
           Exclusive
         </Link>
 
-        {/* Nav Links */}
+        {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-8 text-[16px] font-medium">
-          <Link
-            to="/"
-            className={`hover:text-gray-900 ${
-              location.pathname === "/" ? "text-black underline" : "text-gray-600"
-            }`}
-          >
-            Home
-          </Link>
-          <Link
-            to="/contact"
-            className={`hover:text-gray-900 ${
-              location.pathname === "/contact" ? "text-black underline" : "text-gray-600"
-            }`}
-          >
-            Contact
-          </Link>
-          <Link
-            to="/about"
-            className={`hover:text-gray-900 ${
-              location.pathname === "/about" ? "text-black underline" : "text-gray-600"
-            }`}
-          >
-            About
-          </Link>
-          <Link
-            to="/signup"
-            className={`hover:text-gray-900 ${
-              location.pathname === "/signup" ? "text-black underline" : "text-gray-600"
-            }`}
-          >
-            SignUp
-          </Link>
+          {["/", "/contact", "/about", "/signup"].map((path, index) => {
+            const labels = ["Home", "Contact", "About", "SignUp"];
+            return (
+              <Link
+                key={path}
+                to={path}
+                className={`hover:text-gray-900 ${
+                  location.pathname === path
+                    ? "text-black underline"
+                    : "text-gray-600"
+                }`}
+              >
+                {labels[index]}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right Section */}
-        <div className="flex items-center gap-6">
-          {/* Search */}
-          <form>
-            <div className="hidden md:flex items-center bg-gray-100 px-3 py-2 rounded-lg text-gray-500">
-              <input
-                className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-500"
-                type="text"
-                placeholder="What are you looking for?"
-              />
-              <img src="/Icons/search.png" alt="Search Icon" className="w-5 h-5 ml-2" />
-            </div>
+        <div className="flex items-center gap-4 md:gap-6">
+          {/* Search Bar (hidden on small screens) */}
+          <form className="hidden md:flex items-center bg-gray-100 px-3 py-2 rounded-lg text-gray-500 w-[250px]">
+            <input
+              className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-500"
+              type="text"
+              placeholder="What are you looking for?"
+            />
+            <img src="/Icons/search.png" alt="Search Icon" className="w-5 h-5 ml-2" />
           </form>
 
           {/* Wishlist */}
@@ -108,6 +96,8 @@ const handleLogout = async () => {
               </span>
             )}
           </Link>
+
+          {/* User Profile */}
           {isLoggedIn && (
             <div className="relative">
               <img
@@ -120,22 +110,16 @@ const handleLogout = async () => {
                 <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
                   <ul className="py-2 text-sm text-gray-700">
                     <Link to="/profile">
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Profile
-                    </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                        Profile
+                      </li>
                     </Link>
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                       Settings
                     </li>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => {
-                        localStorage.removeItem("IsLoggedIn");
-                        setIsLoggedIn(false);
-                        setIsOpen(false);
-                        {handleLogout}
-                        navigate("/login")
-                      }}
+                      onClick={handleLogout}
                     >
                       Logout
                     </li>
@@ -144,9 +128,43 @@ const handleLogout = async () => {
               )}
             </div>
           )}
+
+          {/* Mobile Menu Icon */}
+          <button
+            className="md:hidden text-gray-800"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="md:hidden bg-white border-t shadow-lg">
+          <nav className="flex flex-col items-center py-4 space-y-4 text-gray-700 font-medium">
+            {["/", "/contact", "/about", "/signup"].map((path, index) => {
+              const labels = ["Home", "Contact", "About", "SignUp"];
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  onClick={() => setMenuOpen(false)}
+                  className={`${
+                    location.pathname === path
+                      ? "text-black underline"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {labels[index]}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      )}
     </header>
   );
-}
+};
+
 export default Header;

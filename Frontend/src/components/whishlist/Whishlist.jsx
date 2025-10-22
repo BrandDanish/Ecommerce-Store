@@ -1,15 +1,16 @@
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import TopHeader from "../header/TopHeader";
-
-import { useWishlist } from "../../context/Whishlist";
 import Whishlist1 from "./Whishlist1";
-import { useCart } from "../../context/CartContext";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromWishlist, clearWishlist } from "../../redux/wishlistSlice";
+import { addToCart } from "../../redux/cartSlice";
 import { useState } from "react";
 
 const Wishlist = () => {
-  const { wishlist, removeFromWishlist, clearWishlist } = useWishlist();
-  const { addToCart } = useCart();
+  // read wishlist from redux store (adjust selector if your state shape differs)
+  const wishlist = useSelector((state) => state.wishlist.items ?? state.wishlist);
+  const dispatch = useDispatch();
 
   // ✅ Popup state
   const [popup, setPopup] = useState({ show: false, message: "", color: "" });
@@ -20,7 +21,8 @@ const Wishlist = () => {
   };
 
   const handleAddToCart = (product) => {
-    addToCart(product);               // add product into cart
+    // dispatch redux action to add to cart
+    dispatch(addToCart(product));
     showPopup("Added to Cart 🛒", "green");
   };
 
@@ -44,7 +46,7 @@ const Wishlist = () => {
               <div>
                 <button
                   className="border rounded w-[120px] h-[40px] text-sm hover:bg-gray-200"
-                  onClick={clearWishlist}
+                  onClick={() => dispatch(clearWishlist())}
                 >
                   Move all Bag
                 </button>
@@ -66,7 +68,7 @@ const Wishlist = () => {
                           src="/Icons/Fill Eye (1).png"
                           alt="Remove"
                           className="w-6 h-6 cursor-pointer hover:scale-110 transition"
-                          onClick={() => removeFromWishlist(product.id)}
+                          onClick={() => dispatch(removeFromWishlist(product.id))}
                         />
                       </div>
 

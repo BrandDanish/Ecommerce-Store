@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import { useWishlist } from "../../context/Whishlist";
-import { useCart } from "../../context/CartContext";
 import Skeleton from "../skeleton/Skeleton";
+import { useDispatch } from "react-redux";
+// NOTE: adjust these import paths to match your project structure
+import { addToWishlist } from "../../redux/wishlistSlice";
+import { addToCart } from "../../redux/cartSlice";
+
 const SellingProduct = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -65,8 +68,7 @@ const SellingProduct = () => {
 
 // ✅ Subcomponent
 function ProductCard({ product, selectedProductId, setSelectedProductId }) {
-  const { addToWishlist } = useWishlist();
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
   // FakeStore doesn’t have discount/oldPrice directly → we fake it
   const discount = 20;
@@ -91,7 +93,7 @@ function ProductCard({ product, selectedProductId, setSelectedProductId }) {
             className="w-6 h-6 cursor-pointer hover:scale-110 transition"
             onClick={(e) => {
               e.stopPropagation();
-              addToWishlist(product);
+              dispatch(addToWishlist(product));
             }}
           />
           <Link to={`/product/${product.id}`} onClick={(e) => e.stopPropagation()}>
@@ -115,7 +117,7 @@ function ProductCard({ product, selectedProductId, setSelectedProductId }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            addToCart(product);
+            dispatch(addToCart(product));
           }}
           className="absolute bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 translate-y-full group-hover:translate-y-0 transition-all duration-300"
         >

@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+import { useSelector, useDispatch } from "react-redux";
+import { updateQuantity, removeFromCart } from "../../redux/cartSlice";
 import TopHeader from "../header/TopHeader";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
 
 const Cart = () => {
-  const { cart, updateQuantity, removeFromCart } = useCart();
+  const cart = useSelector((state) => state.cart.items || []);
+  const dispatch = useDispatch();
 
   // Subtotal calculation
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
@@ -76,7 +78,14 @@ const Cart = () => {
                         <select
                           value={item.qty}
                           onChange={(e) =>
-                            updateQuantity(item.id, parseInt(e.target.value),  item.color, item.size,)
+                            dispatch(
+                              updateQuantity({
+                                id: item.id,
+                                qty: parseInt(e.target.value),
+                                color: item.color,
+                                size: item.size,
+                              })
+                            )
                           }
                           className="border rounded px-2 py-1"
                         >
@@ -84,7 +93,9 @@ const Cart = () => {
                             <option key={i + 1} value={i + 1}>
                               {i + 1}
                             </option>
+        
                           ))}
+                          
                         </select>
                       </td>
 
@@ -94,7 +105,15 @@ const Cart = () => {
 
                       <td className="py-4 px-4 text-right">
                         <button
-                          onClick={() => removeFromCart(item.id, item.color, item.size)}
+                          onClick={() =>
+                            dispatch(
+                              removeFromCart({
+                                id: item.id,
+                                size: item.size,
+                                color: item.color,
+                              })
+                            )
+                          }
                           className="text-red-500 hover:text-red-700 font-semibold"
                         >
                           Remove

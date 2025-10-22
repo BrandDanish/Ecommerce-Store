@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useWishlist } from "../../context/Whishlist";
-import { useCart } from "../../context/CartContext";
 import Skeleton from "../skeleton/Skeleton";
+import { useDispatch } from "react-redux";
+// adjust these paths to match your project structure
+import { addToCart as addToCartAction } from "../../redux/cartSlice";
+import { addToWishlist as addToWishlistAction } from "../../redux/wishlistSlice";
 
 const ExploreProduct = () => {
   const [products, setProducts] = useState([]);
@@ -83,11 +85,10 @@ const ExploreProduct = () => {
 };
 
 function ProductCard({ product, setPopup }) {
-  const { addToWishlist } = useWishlist();
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
   const handleAddToCart = () => {
-    addToCart(product);
+    dispatch(addToCartAction(product));
     setPopup(product.title);
   };
 
@@ -114,7 +115,7 @@ function ProductCard({ product, setPopup }) {
               className="w-6 h-6 cursor-pointer hover:scale-110 transition"
               onClick={(e) => {
                 e.preventDefault();
-                addToWishlist(product);
+                dispatch(addToWishlistAction(product));
               }}
             />
             <Link to={`/product/${product.id}`}>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import { useCart } from "../../context/CartContext";
-
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/cartSlice";
 const Whishlist1 = () => {
   const [currentIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
@@ -108,14 +108,16 @@ const Whishlist1 = () => {
 // ✅ Product Card Subcomponent
 function ProductCard({ product, triggerPopup }) {
   const [clicked, setClicked] = useState(false);
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
   const handleClick = () => {
+    dispatch(
     addToCart({price:product.price,
       id: product.id,
       name: product.title,
       image: product.image,
-    }); // add product to cart
+    })
+  )
     setClicked(true); // change button color
     triggerPopup("✅ Successfully Added the Product to Cart");
 

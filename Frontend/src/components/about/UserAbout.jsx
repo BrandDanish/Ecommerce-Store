@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useWishlist } from "../../context/Whishlist";
+import { useDispatch } from "react-redux";
+import { addToWishlist as addToWishlistAction } from "../../redux/wishlistSlice"; // adjust path as needed
 
 const products = [
   {
@@ -92,7 +93,9 @@ const UserAbout = () => {
 };
 
 function ProductCard({ product }) {
-  const { addToWishlist } = useWishlist();
+  const dispatch = useDispatch();
+  const addToWishlist = (item) => dispatch(addToWishlistAction(item));
+
   return (
     <div className="w-[250px] p-4 transition-transform duration-500 flex flex-col items-center">
       <div className="relative bg-gray-300 w-[190px] h-[220px] flex items-center justify-center">
