@@ -3,7 +3,7 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Skeleton from "../skeleton/Skeleton";
 import { useDispatch } from "react-redux";
-// adjust these paths to match your project structure
+
 import { addToCart as addToCartAction } from "../../redux/cartSlice";
 import { addToWishlist as addToWishlistAction } from "../../redux/wishlistSlice";
 
@@ -71,11 +71,9 @@ const ExploreProduct = () => {
           <ProductCard key={product.id} product={product} setPopup={setPopup} />
         ))}
       </div>
-
-      {/* View All */}
       <div className="flex justify-center mt-8">
         <Link to="/shop">
-          <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium">
+          <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium hover:bg-red-300 transition">
             View All Products
           </button>
         </Link>
@@ -91,8 +89,6 @@ function ProductCard({ product, setPopup }) {
     dispatch(addToCartAction(product));
     setPopup(product.title);
   };
-
-  // Fake discount + old price
   const discount = 20;
   const oldPrice = (product.price * (100 + discount)) / 100;
   const rating = Math.round(product.rating?.rate || 4);
@@ -106,8 +102,6 @@ function ProductCard({ product, setPopup }) {
           <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
             -{discount}%
           </span>
-
-          {/* Wishlist + Eye */}
           <div className="absolute top-2 right-2 flex flex-col gap-2">
             <img
               src="/Icons/Fill Heart.png"
@@ -134,13 +128,8 @@ function ProductCard({ product, setPopup }) {
             alt={product.title}
             className="w-[140px] h-[140px] object-contain"
           />
-
-          {/* Add to Cart Button on Hover */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleAddToCart();
-            }}
+            
             className="
               absolute bottom-0 left-0 w-full py-2
               bg-black text-white text-sm font-medium

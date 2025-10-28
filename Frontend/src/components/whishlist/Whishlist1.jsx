@@ -105,30 +105,10 @@ const Whishlist1 = () => {
   );
 };
 
-// ✅ Product Card Subcomponent
-function ProductCard({ product, triggerPopup }) {
-  const [clicked, setClicked] = useState(false);
-  const dispatch = useDispatch();
-
-  const handleClick = () => {
-    dispatch(
-    addToCart({price:product.price,
-      id: product.id,
-      name: product.title,
-      image: product.image,
-    })
-  )
-    setClicked(true); // change button color
-    triggerPopup("✅ Successfully Added the Product to Cart");
-
-    // reset button color after 5 sec
-    setTimeout(() => {
-      setClicked(false);
-    }, 5000);
-  };
-
+function ProductCard({product }) {
   return (
-    <div className="relative w-[250px] p-4 flex flex-col items-center">
+    <div className="relative w-[250px] p-4 flex flex-col items-center transition-transform duration-300 group hover:shadow-lg">
+       <Link to={`/product/${product.id}`}>
       <div className="relative bg-gray-100 w-[190px] h-[220px] flex items-center justify-center rounded-lg shadow">
         {/* Discount Badge */}
         <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
@@ -137,35 +117,32 @@ function ProductCard({ product, triggerPopup }) {
 
         {/* Wishlist + Eye Icons */}
         <div className="absolute top-2 right-2 flex flex-col gap-2">
-          <Link to={`/product/${product.id}`}>
+          
           <img
             src="/Icons/Fill Eye.png"
             alt="Wishlist"
             className="w-6 h-6 cursor-pointer hover:scale-110 transition"
           />
-          </Link>
         </div>
-
         {/* Product Image */}
         <img
           src={product.image}
           alt={product.name}
           className="w-[140px] h-[140px] object-contain"
         />
-        <button
-          className={`absolute bottom-0 left-0 right-0 py-2 flex items-center justify-center gap-2 
-            ${clicked ? "bg-green-600" : "bg-black"} text-white transition`}
-          onClick={handleClick}
-        >
+        <button className="
+        absolute bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 translate-y-full group-hover:translate-y-0 
+        transition-all duration-300 flex items-center justify-center gap-2">
           <img
             src="/Icons/Cartbuy.png"
             alt="Cart"
             className="w-5 h-5 filter invert"
           />
-          {clicked ? "Added" : "Add to Cart"}
+          Add to Cart
         </button>
+       
       </div>
-
+      </Link>
       {/* Product Info */}
       <h3 className="mt-4 text-sm font-medium text-center">{product.name}</h3>
       <div className="flex gap-2 mt-2">

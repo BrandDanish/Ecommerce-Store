@@ -4,36 +4,17 @@ import TopHeader from "../header/TopHeader";
 import Whishlist1 from "./Whishlist1";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromWishlist, clearWishlist } from "../../redux/wishlistSlice";
-import { addToCart } from "../../redux/cartSlice";
-import { useState } from "react";
-
+import { Link } from "react-router-dom";
 const Wishlist = () => {
   // read wishlist from redux store (adjust selector if your state shape differs)
   const wishlist = useSelector((state) => state.wishlist.items ?? state.wishlist);
   const dispatch = useDispatch();
 
-  // ✅ Popup state
-  const [popup, setPopup] = useState({ show: false, message: "", color: "" });
-
-  const showPopup = (msg, color) => {
-    setPopup({ show: true, message: msg, color });
-    setTimeout(() => setPopup({ show: false, message: "", color: "" }), 3000);
-  };
-
-  const handleAddToCart = (product) => {
-    // dispatch redux action to add to cart
-    dispatch(addToCart(product));
-    showPopup("Added to Cart 🛒", "green");
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <>
         <TopHeader />
         <Header />
-
-        {/* Page Content */}
         <main className="flex-grow">
           <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10 p-6 relative">
             {/* Section Header */}
@@ -52,8 +33,6 @@ const Wishlist = () => {
                 </button>
               </div>
             </div>
-
-            {/* Products Grid */}
             <div className="flex flex-wrap gap-6">
               {wishlist.length > 0 ? (
                 wishlist.map((product) => (
@@ -71,16 +50,13 @@ const Wishlist = () => {
                           onClick={() => dispatch(removeFromWishlist(product.id))}
                         />
                       </div>
-
+                      <Link to={`/product/${product.id}`}>
                       <img
                         src={product.image}
                         alt={product.name}
                         className="w-[140px] h-[140px] object-contain"
-                      />
-
-                      {/* ✅ Add to Cart Button */}
+                      /> 
                       <button
-                        onClick={() => handleAddToCart(product)}
                         className="absolute bottom-0 left-0 right-0 bg-black text-white py-2 flex items-center justify-center gap-2 hover:bg-green-600 transition"
                       >
                         <img
@@ -90,8 +66,8 @@ const Wishlist = () => {
                         />
                         Add to Cart
                       </button>
+                       </Link>
                     </div>
-
                     <h3 className="mt-4 text-sm font-medium text-center">
                       {product.name}
                     </h3>
@@ -109,16 +85,6 @@ const Wishlist = () => {
                 <p className="text-gray-500">No items in wishlist.</p>
               )}
             </div>
-
-            {/* ✅ Popup */}
-            {popup.show && (
-              <div
-                className="fixed top-6 right-6 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition"
-                style={{ backgroundColor: popup.color }}
-              >
-                {popup.message}
-              </div>
-            )}
           </div>
         </main>
         <Whishlist1 />

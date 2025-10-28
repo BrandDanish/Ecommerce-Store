@@ -18,10 +18,10 @@ const Cart = () => {
       <Header />
 
       <div className="p-8 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+        <h1 className="text-3xl font-bold mt-14 mb-6 text-center">Shopping Cart</h1>  
 
         {cart.length === 0 ? (
-          <p className="text-gray-500">Your cart is empty.</p>
+          <p className="text-gray-500 mb-14 text-center">Your cart is empty.</p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left: Cart Table & Coupon */}
@@ -49,15 +49,11 @@ const Cart = () => {
                           {/* ✅ Product name with inline color & size */}
                           <div className="flex items-center gap-3 flex-wrap">
                             <span className="font-semibold">{item.name}</span>
-
-                            {/* Inline size */}
                             {item.size && (
                               <span className="text-sm text-gray-600">
                                 <strong>Size:</strong> {item.size}
                               </span>
                             )}
-
-                            {/* Inline color */}
                             {item.color && (
                               <span className="text-sm text-gray-600 flex items-center gap-1">
                                 <strong>Color:</strong>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-// adjust the import path to where your Redux action/slice is located
-import { addToCart } from "../../redux/cartSlice"; // <- change path as needed
+
+import { addToCart } from "../../redux/cartSlice"; 
 
 const MusicSection = () => {
   const dispatch = useDispatch();
@@ -62,7 +62,6 @@ const MusicSection = () => {
   return (
     <div className="w-full max-w-[800px] mx-auto mt-6 mb-10 p-6 bg-black">
       <div className="flex items-center justify-between">
-        {/* Left Side (Text + Countdown + Button) */}
         <div>
           <h3 className="text-2xl text-green-500">Categories</h3>
           <h1 className="text-3xl text-white font-bold">
@@ -78,9 +77,9 @@ const MusicSection = () => {
           </div>
           <button
             onClick={handleBuyNow}
-            className="bg-[#00FF66] text-white px-6 py-3 rounded font-medium mt-6 hover:bg-green-600 transition"
+            className="bg-[#00FF66] text-white px-6 py-3 rounded font-medium mt-6 hover:bg-red-300 "
           >
-            Buy Now
+            Buy Now!
           </button>
         </div>
 

@@ -43,6 +43,9 @@ const AllProducts = () => {
               {product.title}
             </h3>
             <p className="text-red-500 font-bold">${product.price}</p>
+            <button className="bg-black text-white w-full mt-100 py-2 rounded transition opacity-0 hover:opacity-100">
+             Add to Cart
+             </button>
           </Link>
         ))}
       </div>
@@ -51,5 +54,4 @@ const AllProducts = () => {
     </>
   );
 };
-
 export default AllProducts;

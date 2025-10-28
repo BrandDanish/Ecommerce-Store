@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import Skeleton from "../skeleton/Skeleton";
 import { useDispatch } from "react-redux";
-// NOTE: adjust these import paths to match your project structure
 import { addToWishlist } from "../../redux/wishlistSlice";
-import { addToCart } from "../../redux/cartSlice";
 
 const SellingProduct = () => {
   const [products, setProducts] = useState([]);
@@ -44,7 +42,7 @@ const SellingProduct = () => {
         </div>
         <div className="flex gap-2 mt-6">
           <Link to='/shop'>
-          <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium">
+          <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium hover:bg-red-400 transition">
             View All
           </button>
           </Link>
@@ -104,26 +102,19 @@ function ProductCard({ product, selectedProductId, setSelectedProductId }) {
             />
           </Link>
         </div>
-
-        {/* Product Image */}
         <img
           src={product.image}
           alt="Product"
           className="w-[140px] h-[140px] object-contain"
         />
       </div>
-   </Link>
-      
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            dispatch(addToCart(product));
-          }}
           className="absolute bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 translate-y-full group-hover:translate-y-0 transition-all duration-300"
         >
           Add To Cart
         </button>
       <h3 className="mt-4 text-sm font-medium text-center">{product.title}</h3>
+    </Link>
       <div className="flex gap-2 mt-2">
         <span className="text-red-500 font-bold">${product.price}</span>
         <span className="block text-left line-through text-gray-500 text-sm">

@@ -63,7 +63,7 @@ const Category = () => {
       </div>
 
       {/* Category Boxes */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 justify-items-center mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 justify-items-center mt-6">
         {loading
           ? Array(5)
               .fill(0)
@@ -71,7 +71,7 @@ const Category = () => {
           : visibleCategories.map((cat, index) => (
               <div
                 key={index}
-                className={`w-full max-w-[135px] h-[135px] border rounded-lg p-4 flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer ${
+                className={`w-full max-w-[135px] h-[135px] border rounded-lg p-4 flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer hover:bg-red-600 ${
                   index === currentIndex
                     ? "bg-red-500 text-white border-red-500"
                     : "bg-white border-gray-300 hover:border-red-400 hover:shadow-md"

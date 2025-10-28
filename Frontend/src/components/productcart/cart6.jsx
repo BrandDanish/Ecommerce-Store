@@ -28,10 +28,7 @@ const FeaturedSection = () => {
             </button>
           </div>
         </div>
-
-        {/* Right Column */}
         <div className="grid grid-rows-2 gap-6">
-          {/* Top Large Banner */}
           <div className="relative  overflow-hidden bg-black text-white flex items-end p-6 h-[284px]">
             <img
               src="/Icons/women.png"

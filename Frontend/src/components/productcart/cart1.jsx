@@ -3,9 +3,7 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Skeleton from "../skeleton/Skeleton";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/cartSlice";
 import { addToWishlist } from "../../redux/wishlistSlice";
-
 const initialTime = {
   days: 3,
   hours: 23,
@@ -131,9 +129,7 @@ const FlashSales = () => {
       </div>
 
       {/* Products */}
-      <div
-        className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-6 justify-items-center"
-      >
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-6 justify-items-center">
         {VisibleProduct.map((product) => (
           <ProductCard key={product.id} product={product} showPopup={showPopup} />
         ))}
@@ -142,7 +138,7 @@ const FlashSales = () => {
       {/* View All Button */}
       <div className="flex justify-center mt-8">
         <Link to="/shop">
-          <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium hover:bg-red-600 transition">
+          <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium hover:bg-red-300 transition">
             View All Products
           </button>
         </Link>
@@ -180,7 +176,7 @@ function ProductCard({ product, showPopup }) {
   return (
     <div className="relative group w-full max-w-[250px] p-3 sm:p-4 transition duration-300 flex flex-col items-center border rounded-lg hover:shadow-lg">
       <Link to={`/product/${product.id}`}>
-        <div className="relative bg-gray-100 w-full h-[200px] sm:h-[220px] flex items-center justify-center rounded-lg overflow-hidden">
+        <div className="relative bg-gray-100 w-full h-[200px] sm:h-[220px] flex items-center justify-center rounded-lg overflow-hidden px-5">
           <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
             -{product.discount}%
           </span>
@@ -212,11 +208,7 @@ function ProductCard({ product, showPopup }) {
           />
 
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(addToCart(product));
-              showPopup("Added to Cart 🛒", "green");
-            }}
+          
             className="absolute bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 translate-y-full group-hover:translate-y-0 transition-all duration-300"
           >
             Add To Cart
