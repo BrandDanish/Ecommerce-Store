@@ -17,16 +17,16 @@ const Cart = () => {
       <TopHeader />
       <Header />
 
-      <div className="p-8 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mt-14 mb-6 text-center">Shopping Cart</h1>  
+      <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto">
+        <h1 className=" text-2xl sm:text-3xl font-bold mt-14 sm:mt-14 mb-6 text-center">Shopping Cart</h1>  
 
         {cart.length === 0 ? (
           <p className="text-gray-500 mb-14 text-center">Your cart is empty.</p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left: Cart Table & Coupon */}
-            <div className="lg:col-span-2">
-              <table className="w-full border-collapse bg-white shadow-md rounded-lg">
+            <div className="lg:col-span-2 overflow-x-auto">
+              <table className="w-full border-collapse bg-white shadow-md rounded-lg text-sm sm:text-base">
                 <thead>
                   <tr className="border-b text-left bg-gray-100">
                     <th className="py-3 px-4">Product</th>

@@ -110,19 +110,19 @@ const UserLog = () => {
 
   return (
     <>
-      <section className="flex flex-col lg:flex-row items-center justify-center min-h-[80vh] mt-20 mb-20">
+      <section className="w-full flex flex-col lg:flex-row items-center justify-center min-h-[80vh] mt-15 mb-15">
         {/* Left Image Section */}
-        <div className="w-1/2 flex items-center justify-center">
+        <div className="w-full md:w-1/2 flex items-center justify-center">
           <img
             src="/Icons/mobilecart.png"
             alt="Shopping"
-            className="h-full w-full object-cover"
+            className="w-full h-64 sm:h-full object-cover"
           />
         </div>
 
         {/* Right Login Section */}
-        <div className="w-full lg:w-1/2 flex justify-center">
-          <div className="w-full max-w-md">
+        <div className="w-full md:w-1/2 lg:w-1/2 flex justify-center">
+          <div className="w-full max-w-md px-4">
             <h2 className="text-3xl font-bold mb-2">Log in to Exclusive</h2>
             <p className="text-gray-600 mb-6">Enter your details below</p>
 

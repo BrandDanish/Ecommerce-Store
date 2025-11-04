@@ -150,24 +150,22 @@ const Profile = () => {
       <TopHeader />
       <Header />
 
-      <div className="flex flex-col items-center bg-gray-100 py-12 min-h-screen">
-        <div className="w-[90%] max-w-6xl flex justify-between items-center mb-10">
-          <h1 className="text-2xl font-semibold text-gray-800">Manage Account</h1>
-          <h2 className="text-lg font-medium text-red-500">
+      <div className="flex flex-col items-center bg-gray-100 py-12 min-h-screen px-4 sm:px-6">
+        <div className="w-full max-w-6xl flex justify-between items-center mb-10">
+          <h1 className="text-lg sm:text-2xl font-semibold text-gray-800">Manage Account</h1>
+          <h2 className="text-lg sm:text-2xl font-medium text-red-500">
             Welcome, {user ? user.name : "Loading..."} 👋
           </h2>
         </div>
-
-        <div className="flex w-[90%] max-w-6xl shadow-xl rounded-2xl overflow-hidden border border-gray-200 bg-white">
+        <div className="flex w-full max-w-6xl shadow-xl rounded-2xl overflow-hidden border border-gray-200 bg-white flex-col md:flex-row">
           {/* Sidebar */}
-          <div className="w-1/4 bg-white p-6 border-r border-gray-200">
+          <div className="md:w-1/4 w-full bg-white p-6 border-b md:border-b-0 md:border-r border-gray-200">
             <h2 className="text-lg font-semibold mb-4 text-gray-700">Manage My Account</h2>
             <ul className="space-y-2 mb-6">
               <li className="text-red-500 font-medium cursor-pointer">My Profile</li>
               <li className="cursor-pointer hover:text-red-500">Address Book</li>
               <li className="cursor-pointer hover:text-red-500">Payment Options</li>
             </ul>
-
             <h2 className="text-lg font-semibold mb-4 text-gray-700">My Orders</h2>
             <ul className="space-y-2 mb-6">
               <li className="cursor-pointer hover:text-red-500">My Returns</li>

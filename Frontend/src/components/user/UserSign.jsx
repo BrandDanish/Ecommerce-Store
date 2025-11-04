@@ -100,26 +100,26 @@ const UserSign = () => {
 
   if (showLogin) return <UserLog />;
   return (
-    <div className="flex min-h-screen mb-20 mt-20">
+    <div className="flex w-full flex-col mb-20 mt-20 md:flex-row">
       {/* Left Section */}
-      <div className="w-1/2 flex items-center justify-center">
+      <div className="w-full md:w-1/2 flex items-center justify-center">
         {loading ? (
           <Skeleton />
         ) : (
           <img
             src="/Icons/mobilecart.png"
             alt="Shopping"
-            className="h-full w-full object-cover"
+            className="h-64 w-full sm:h-full object-cover"
           />
         )}
       </div>
 
       {/* Right Section */}
-      <div className="w-1/2 flex items-center justify-center">
+      <div className="w-full md:w-1/2 flex items-center justify-center">
         {loading ? (
           <Skeleton />
         ) : (
-          <div className="w-96">
+          <div className="w-full max-w-md px-4">
             <h2 className="text-2xl font-bold mb-2">Create an account</h2>
             <p className="text-black mb-6">Enter your details below</p>
 
