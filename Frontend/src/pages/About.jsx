@@ -20,7 +20,7 @@ const OurStory = () => {
     <>
       <TopHeader />
       <Header />
-      <section className="w-full max-w-[1170px] mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10 min-h-[400px]">
+      <section className="w-full max-w-[1170px] mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10 min-h-[400px] overflow-hidden">
         {loading ? (
           <div className="w-full flex justify-center items-center">
             <Skeleton />
