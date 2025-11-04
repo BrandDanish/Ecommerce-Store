@@ -1,8 +1,8 @@
 const Guaranttee = () => {
     return (
         <div>
-            <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10 p-6">
-               <div className="flex items-center justify-center gap-[88px]">
+            <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10  flex flex-col items-center justify-center overflow-x-hidden">
+               <div className=" grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3  gap-[88px]">
                 <div>
                 <img
                     src="/Icons/Services.png"

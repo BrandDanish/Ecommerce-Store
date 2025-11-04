@@ -58,18 +58,17 @@ const MusicSection = () => {
     dispatch(addToCart(musicProduct));
     navigate("/cart");
   };
-
   return (
     <div className="w-full max-w-[800px] mx-auto mt-6 mb-10 p-6 bg-black">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row  px-3  py-2 sm:py-3  items-center justify-between">
         <div>
-          <h3 className="text-2xl text-green-500">Categories</h3>
-          <h1 className="text-3xl text-white font-bold">
+          <h3 className=" text-green-500 text-sm sm:text-base">Categories</h3>
+          <h1 className="text-sm sm:text-base text-white font-bold">
             Enhance Your <br /> Music Experience
           </h1>
 
           {/* Countdown */}
-          <div className="flex items-center gap-4 font-bold text-lg text-white mt-4">
+          <div className="flex items-center gap-4 font-bold text-sm sm:text-base text-white mt-4">
             <TimeItem label="Days" value={timeLeft.days} />
             <TimeItem label="Hours" value={timeLeft.hours} />
             <TimeItem label="Minutes" value={timeLeft.minutes} />
@@ -82,9 +81,7 @@ const MusicSection = () => {
             Buy Now!
           </button>
         </div>
-
-        {/* Right Side (Image) */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 mt-6 sm:mt-0">
           <img
             src="/Icons/BomBox.png"
             alt="Music Speaker"
@@ -103,5 +100,4 @@ const TimeItem = ({ label, value }) => (
     <span className="text-xs">{label}</span>
   </div>
 );
-
 export default MusicSection;

@@ -12,7 +12,7 @@ import FeaturedSection from "../components/productcart/cart6";
 import Guaranttee from "../components/productcart/cart7";
 const Home = () => {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen overflow-x-hidden">
             <TopHeader />
             <Header />
             <main className="flex flex-1 justify-center items-center">

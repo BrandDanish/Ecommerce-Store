@@ -54,10 +54,10 @@ const ExploreProduct = () => {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-10 px-3">
         <div className="flex items-center gap-4">
           <div className="border-l-[10px] border-red-500 pl-4 h-[25px]">
-            <p className="text-red-500 font-medium">Our Product</p>
+            <p className="text-red-500 font-medium sm:font-sans">Our Product</p>
             <h2 className="text-2xl font-bold ml-[-30px]">
               Explore Our Product
             </h2>
@@ -66,12 +66,12 @@ const ExploreProduct = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-4 gap-6 mt-6 rounded-lg py-8">
+      <div className="flex flex-col sm:flex-row gap-6 mt-6 rounded-lg" >
         {products.map((product) => (
           <ProductCard key={product.id} product={product} setPopup={setPopup} />
         ))}
       </div>
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-5">
         <Link to="/shop">
           <button className="bg-red-500 text-white px-6 py-3 rounded-md font-medium hover:bg-red-300 transition">
             View All Products
