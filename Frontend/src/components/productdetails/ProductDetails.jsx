@@ -122,17 +122,16 @@ const ProductDetail = () => {
     <>
       <TopHeader />
       <Header />
-
-      <div className="flex flex-col lg:flex-row gap-10 px-8 py-10 justify-center items-center">
+      <div className="flex flex-col lg:flex-row gap-10 px-8 py-5 justify-center items-center overflow-x-hidden">
         {/* Left Section */}
-        <div className="flex gap-6 w-full lg:w-1/2">
-          <div className="flex flex-col gap-8 pl-[135px]">
+        <div className="flex flex-col-reverse lg:flex-row gap-6 w-full lg:w-1/2 ">
+          <div className="flex flex-row lg:flex-col gap-4 lg:gap-8 lg:pl-[135px] justify-center items-center">
             {productImages.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt="thumbnail"
-                className={`w-20 h-20 object-contain cursor-pointer border rounded-lg bg-gray-300 ${
+                className={`w-16 h-16 sm:w-full sm:h-20 object-contain cursor-pointer border rounded-lg bg-gray-300 ${
                   mainImage === img ? "border-red-500" : "border-gray-300"
                 }`}
                 onClick={() => setMainImage(img)}
@@ -141,18 +140,18 @@ const ProductDetail = () => {
           </div>
 
           <div className="flex-1 flex items-center justify-center border rounded-lg bg-gray-300">
-            <img src={mainImage} alt={product.title} className="w-[400px] h-[400px] object-contain" />
+            <img src={mainImage} alt={product.title} className="w-full max-w-[350px] h-auto  object-contain" />
           </div>
         </div>
 
         {/* Right Section */}
-        <div className="space-y-2 w-[500px] h-[600px] pt-[88px]">
-          <h2 className="text-2xl font-semibold">{product.title}</h2>
+        <div className="space-y-2 w-full lg:w-[500px] h-[600px] pt-[88px]">
+          <h2 className="text-xl sm:text-2xl font-semibold">{product.title}</h2>
           <p className="text-yellow-500">
             ⭐⭐⭐⭐ {product.rating?.rate || 4.5} ({product.rating?.count || 100} Reviews){" "}
             <span className="text-green-600">In Stock</span>
           </p>
-          <p className="text-2xl font-bold">${product.price}</p>
+          <p className="text-xl sm:text-2xl font-bold">${product.price}</p>
           <p className="text-gray-600">{product.description}</p>
 
           {/* Colors Inline with Sizes */}
@@ -188,7 +187,7 @@ const ProductDetail = () => {
           </div>
 
           {/* Quantity + Buy Now */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center border">
               <button onClick={() => handleQtyChange("dec")} className="px-3 py-2 text-lg font-bold hover:bg-gray-200 border">
                 -

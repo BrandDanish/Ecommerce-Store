@@ -51,7 +51,7 @@ const RelatedProduct = () => {
   if (product.length === 0) return <div>No products available</div>;
 
   return (
-    <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10 p-6">
+    <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center mt-8">
@@ -62,7 +62,7 @@ const RelatedProduct = () => {
       </div>
 
       {/* Products */}
-      <div className="flex justify-center items-center mt-6 gap-6 rounded-lg py-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:flex lg:justify-center sm:gap-6 py-6">
         {VisibleProduct.map((product, index) => (
           <ProductCard
             key={product.id}
@@ -83,12 +83,12 @@ function ProductCard({ product, active, selected, onSelect }) {
 
   return (
     <div
-      className={`relative w-[250px] p-4 transition-transform duration-500 flex flex-col items-center cursor-pointer ${
+      className={`relative w-full max-w-[230px] p-4 transition-transform duration-500 flex flex-col items-center cursor-pointer ${
         active ? "opacity-100" : "opacity-100"
       }`}
       onClick={onSelect} // ✅ Select this product when clicked
     >
-      <div className="relative bg-gray-300 w-[190px] h-[220px] flex items-center justify-center">
+      <div className="relative bg-gray-300 w-full max-w-[190px] h-[200px] flex items-center justify-center mx-auto">
         {/* Discount Badge */}
         <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
           -{product.discount}%
@@ -124,7 +124,7 @@ function ProductCard({ product, active, selected, onSelect }) {
       </div>
       {selected && (
         <button
-          className="mt-0.4 w-[190px] bg-black text-white py-2  hover:bg-gray-800 transition"
+          className="mt-1 w-full max-w-[190px] bg-black text-white py-2 hover:bg-gray-800 transition"
           onClick={(e) => {
             e.stopPropagation();
             dispatch(addToCart(product));

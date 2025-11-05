@@ -66,7 +66,7 @@ const ExploreProduct = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="flex flex-col sm:flex-row gap-6 mt-6 rounded-lg" >
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 rounded-lg place-items-center" >
         {products.map((product) => (
           <ProductCard key={product.id} product={product} setPopup={setPopup} />
         ))}
@@ -95,7 +95,7 @@ function ProductCard({ product, setPopup }) {
   const reviews = product.rating?.count || 50;
 
   return (
-    <div className="relative group w-[250px] px-4 flex flex-col items-center transition-transform duration-300 group hover:shadow-lg">
+    <div className="relative group w-full max-w-[250px] px-4 flex flex-col items-center transition-transform duration-300 hover:shadow-lg">
       <Link to={`/product/${product.id}`}>
         <div className="relative bg-gray-200 w-[190px] h-[220px] flex items-center justify-center rounded-lg overflow-hidden">
           {/* Discount */}
