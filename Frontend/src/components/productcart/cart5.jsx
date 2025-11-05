@@ -66,7 +66,7 @@ const ExploreProduct = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 rounded-lg place-items-center" >
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 rounded-lg place-items-center" >
         {products.map((product) => (
           <ProductCard key={product.id} product={product} setPopup={setPopup} />
         ))}
@@ -97,7 +97,7 @@ function ProductCard({ product, setPopup }) {
   return (
     <div className="relative group w-full max-w-[250px] px-4 flex flex-col items-center transition-transform duration-300 hover:shadow-lg">
       <Link to={`/product/${product.id}`}>
-        <div className="relative bg-gray-200 w-[190px] h-[220px] flex items-center justify-center rounded-lg overflow-hidden">
+        <div className="relative bg-gray-200 w-full max-w-[190px] h-[200px] flex items-center justify-center rounded-lg overflow-hidden">
           {/* Discount */}
           <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
             -{discount}%
