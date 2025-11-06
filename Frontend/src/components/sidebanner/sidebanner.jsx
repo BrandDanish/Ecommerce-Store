@@ -115,11 +115,11 @@ const SideBanner = () => {
                       </div>
 
                       {/* Right Side */}
-                      <div className="w-[120px] sm:w-[160px] md:w-auto mt-4 sm:mt-0">
+                      <div className="w-full flex justify-center mt-4 sm:mt-0 sm:w-[40%]">
                         <img
                           src={product.image}
                           alt={product.title}
-                          className="h-[150px] sm:h-[220px] md:h-[280px] object-contain mx-auto drop-shadow-lg"
+                          className="h-[180px] sm:h-[220px] md:h-[280px] object-contain mx-auto drop-shadow-lg"
                         />
                       </div>
                     </div>
