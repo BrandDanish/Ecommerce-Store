@@ -26,7 +26,8 @@ const SellingProduct = () => {
           </Link>
         </div>
       </div>
-      <ProductCard />
+      <ProductCard 
+      />
     </div>
   );
 };

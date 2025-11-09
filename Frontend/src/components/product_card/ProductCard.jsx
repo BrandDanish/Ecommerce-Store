@@ -5,11 +5,10 @@ import { addToCart } from "../../redux/cartSlice";
 import { Link } from "react-router-dom";
 import { FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
 
-const ProductCard = () => {
+const ProductCard = ({currentIndex}) => {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist.items);
   const [products, setProducts] = useState([]);
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -36,21 +35,20 @@ const ProductCard = () => {
 
     fetchProducts();
   }, []);
+  
   const total = products.length;
-  // const VisibleProduct = [
-  //   products[currentIndex],
-  //   products[(currentIndex + 1) % total],
-  //   products[(currentIndex + 2) % total],
-  //   products[(currentIndex + 3) % total],
-  // ];
+  const VisibleProduct = currentIndex !== undefined
+  ? products.slice(currentIndex, currentIndex + 4) // show 4 products for carousel
+  : products;
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 ">
-      {products.map((product) => {
+      {VisibleProduct.filter(Boolean).map((product) => {
         const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
         return (
           <div key={product.id} className=" relative w-[250px] p-4 flex flex-col items-start justify-start">
+            
             <Link to={`/product/${product.id}`}>
               <div className="group relative bg-gray-100 w-full h-[200px] sm:h-[220px] flex items-center justify-center rounded-lg overflow-hidden px-5">
 
@@ -133,5 +131,4 @@ const ProductCard = () => {
     </div>
   );
 };
-
 export default ProductCard;

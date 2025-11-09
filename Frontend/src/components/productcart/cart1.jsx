@@ -12,7 +12,7 @@ const initialTime = {
 
 const FlashSales = () => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
-
+  const [currentIndex, setCurrentIndex] = useState(0);
   // Countdown Timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,6 +37,12 @@ const FlashSales = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
+  }
+  const handleNext = () => {
+    setCurrentIndex((prev) => prev + 1);
+  };
   return (
     <div className="w-full max-w-[1200px] mx-auto bg-white mt-6 mb-10 p-4 sm:p-6 relative">
       {/* Header */}
@@ -63,11 +69,13 @@ const FlashSales = () => {
         {/* Arrows */}
         <div className="flex gap-2">
           <img
+            onClick={handlePrev}
             src="/Icons/Fill With Left Arrow.png"
             
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition"
           />
           <img
+             onClick={handleNext}
             src="/Icons/Right Arrow.png"
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition"
           />
@@ -75,7 +83,9 @@ const FlashSales = () => {
       </div>
 
       {/* Products */}
-      <ProductCard />
+      <ProductCard 
+        currentIndex={currentIndex}
+      />
 
       {/* View All Button */}
       <div className="flex justify-center mt-8">

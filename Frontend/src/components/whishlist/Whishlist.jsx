@@ -29,11 +29,11 @@ const Wishlist = () => {
                   className="border rounded w-[120px] h-[40px] text-sm hover:bg-gray-200"
                   onClick={() => dispatch(clearWishlist())}
                 >
-                  Move all Bag
+                  Move all
                 </button>
               </div>
             </div>
-            <div className="flex flex-wrap gap-6">
+            <div className="flex flex-wrap gap-6 justify-center items-center">
               {wishlist.length > 0 ? (
                 wishlist.map((product) => (
                   <div
@@ -82,7 +82,7 @@ const Wishlist = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500">No items in wishlist.</p>
+                <p className="text-gray-500">Your wishlist cart is empty.</p>
               )}
             </div>
           </div>
