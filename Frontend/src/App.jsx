@@ -12,6 +12,7 @@ import Profile from './components/profile/Profile'
 import ProductDetail from './components/productdetails/ProductDetails'
 import ErrorHandle from './components/errorhandle/Error'
 import AllProducts from './pages/Shop'
+import ProductCard from './components/product_card/ProductCard'
 const App = () => {
   return (
     <Router>
@@ -28,6 +29,7 @@ const App = () => {
         <Route path='*' element={<ErrorHandle/>}/>
         <Route path='/shop' element={<AllProducts/>}/>
         <Route path='/login' element={<UserLog/>}/>
+        <Route path='/productcard' element={<ProductCard/>}/>
       </Routes>
       <ToastContainer
         position="center"
