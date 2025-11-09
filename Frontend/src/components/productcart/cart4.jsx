@@ -59,7 +59,7 @@ const MusicSection = () => {
     navigate("/cart");
   };
   return (
-    <div className="w-full max-w-[800px] mx-auto mt-6 mb-10 p-6 bg-black">
+    <div className="container  mx-auto mt-6 mb-10 p-6 bg-black">
       <div className="flex flex-col sm:flex-row  px-3  py-2 sm:py-3  items-center justify-between">
         <div>
           <h3 className=" text-green-500 text-sm sm:text-base">Categories</h3>

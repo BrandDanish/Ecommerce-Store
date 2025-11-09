@@ -9,7 +9,7 @@ import ProductCard from "../product_card/ProductCard";
 const SellingProduct = () => {
   // ✅ only one ope
   return (
-    <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10 p-6">
+    <div className="container mx-auto bg-white mt-6 mb-10 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">

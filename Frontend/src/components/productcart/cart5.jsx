@@ -11,7 +11,7 @@ import ProductCard from "../product_card/ProductCard";
 const ExploreProduct = () => {
 
   return (
-    <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10 p-6 relative">
+    <div className="container mx-auto bg-white mt-6 mb-10 p-6 relative">
       <div className="flex flex-col sm:flex-row items-center justify-between mb-10 px-3">
         <div className="flex items-center gap-4">
           <div className="border-l-[10px] border-red-500 pl-4 h-[25px]">

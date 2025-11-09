@@ -1,6 +1,6 @@
 const FeaturedSection = () => {
   return (
-    <div className="w-full max-w-[1100px] mx-auto px-6 py-10 mt-[-150px]">
+    <div className="container mx-auto px-6 py-10 mt-[-150px]">
       {/* Section Heading */}
       <div className="flex items-center gap-4 mt-[100px] mb-8">
         <div className="border-l-[10px] border-red-500 pl-4 h-[25px]">

@@ -33,7 +33,7 @@ const Category = () => {
     setCurrentIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
 
   return (
-    <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10 p-4 sm:p-6">
+    <div className="container  mx-auto bg-white mt-6 mb-10 p-4 sm:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4 sm:gap-0">
         <div className="flex items-start sm:items-center gap-4">

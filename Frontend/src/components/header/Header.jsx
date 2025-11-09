@@ -33,9 +33,8 @@ const Header = () => {
       console.error("Logout failed:", error);
     }
   };
-
   return (
-    <header className="bg-white shadow-sm top-0 z-50 w-full">
+    <header className="container bg-white shadow-sm top-0 z-50 w-full">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link
@@ -141,8 +140,10 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t shadow-lg">
-          <nav className="flex flex-col items-center py-4 space-y-4 text-gray-700 font-medium">
+        <div className={`md:hidden fixed right-0 h-full w-64 bg-white border-t shadow-lg transform transition-transform duration-300 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+      }`}>          
+      <nav className="flex flex-col items-center py-4 space-y-4 text-gray-700 font-medium">
             {["/", "/contact", "/about", "/signup"].map((path, index) => {
               const labels = ["Home", "Contact", "About", "SignUp"];
               return (

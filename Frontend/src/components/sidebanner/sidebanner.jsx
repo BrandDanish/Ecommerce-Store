@@ -21,7 +21,7 @@ const SideBanner = () => {
       });
   }, []);
 
-  // Filter products when category changes
+
   useEffect(() => {
     if (products.length > 0) {
       const filter = products.filter((p) => p.category === selectedCategory);
@@ -40,7 +40,7 @@ const SideBanner = () => {
   }, [filtered]);
 
   return (
-    <div className="bg-white border-t mt-2 w-full">
+    <div className="container mx-auto bg-white border-t mt-2 ">
       <div className="flex flex-col md:flex-row md:pl-[80px] xl:pl-[135px] gap-4 md:gap-6 mt-[-4px]">
         {/* Sidebar */}
         <aside className="bg-white border-r md:w-[217px] md:h-[344px] md:mt-1 md:block hidden">
@@ -80,8 +80,8 @@ const SideBanner = () => {
         </aside>
 
         {/* Banner Carousel */}
-        <div className="flex-1 p-2 sm:p-4 md:ml-4">
-          <div className="relative overflow-hidden w-full h-[220px] sm:h-[280px] md:h-[344px] rounded-xl">
+        <div className="container flex-1 p-2 sm:p-4 md:ml-4">
+          <div className=" relative overflow-hidden w-full h-[220px] sm:h-[280px] md:h-[344px] rounded-xl">
             {loading ? (
               <Skeleton />
             ) : filtered.length > 0 ? (
