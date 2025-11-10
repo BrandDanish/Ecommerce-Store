@@ -63,29 +63,42 @@ const Category = () => {
       </div>
 
       {/* Category Boxes */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 justify-items-center mt-6">
-        {loading
-          ? Array(5)
-              .fill(0)
-              .map((_, idx) => <Skeleton key={idx} width={135} height={135} />)
-          : visibleCategories.map((cat, index) => (
-              <div
-                key={index}
-                className={`w-full max-w-[135px] h-[135px] border rounded-lg p-4 flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer hover:bg-red-600 ${
-                  index === currentIndex
-                    ? "bg-red-500 text-white border-red-500"
-                    : "bg-white border-gray-300 hover:border-red-400 hover:shadow-md"
-                }`}
-              >
-                <img
-                  src={cat.icon}
-                  className="w-[45px] h-[45px] sm:w-[50px] sm:h-[50px] mb-2 object-contain"
-                  alt={cat.name}
-                />
-                <span className="text-sm sm:text-base">{cat.name}</span>
-              </div>
-            ))}
-      </div>
+      {/* Category Boxes */}
+<div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 justify-items-center mt-6">
+  {loading
+    ? Array(5)
+        .fill(0)
+        .map((_, idx) => (
+          <div
+            key={idx}
+            className="w-full max-w-[135px] h-[135px] border rounded-lg p-4 flex flex-col items-center justify-center text-center animate-pulse border-gray-200"
+          >
+            {/* Icon Skeleton */}
+            <div className="w-[50px] h-[50px] bg-gray-200 rounded-md mb-3"></div>
+
+            {/* Text Skeleton */}
+            <div className="w-20 h-4 bg-gray-200 rounded"></div>
+          </div>
+        ))
+    : visibleCategories.map((cat, index) => (
+        <div
+          key={index}
+          className={`w-full max-w-[135px] h-[135px] border rounded-lg p-4 flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer hover:bg-red-600 ${
+            index === currentIndex
+              ? "bg-red-500 text-white border-red-500"
+              : "bg-white border-gray-300 hover:border-red-400 hover:shadow-md"
+          }`}
+        >
+          <img
+            src={cat.icon}
+            className="w-[45px] h-[45px] sm:w-[50px] sm:h-[50px] mb-2 object-contain"
+            alt={cat.name}
+          />
+          <span className="text-sm sm:text-base">{cat.name}</span>
+        </div>
+      ))}
+</div>
+
 
       <div className="border-gray-300 border-t w-full mt-10"></div>
     </div>

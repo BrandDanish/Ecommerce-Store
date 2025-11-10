@@ -33,6 +33,7 @@ const Wishlist = () => {
                 </button>
               </div>
             </div>
+            <h1 className=" text-2xl sm:text-3xl font-bold mt-14 sm:mt-14 mb-6 text-center">Wishlist Cart</h1>
             <div className="flex flex-wrap gap-6 justify-center items-center">
               {wishlist.length > 0 ? (
                 wishlist.map((product) => (

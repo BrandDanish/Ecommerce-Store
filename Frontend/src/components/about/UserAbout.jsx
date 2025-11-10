@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToWishlist as addToWishlistAction } from "../../redux/wishlistSlice";
 
+// Dummy Team Data
 const products = [
   {
     id: 1,
@@ -62,6 +63,8 @@ const products = [
 
 const UserAbout = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+
   const total = products.length;
   const visibleProducts = [
     products[currentIndex],
@@ -69,13 +72,22 @@ const UserAbout = () => {
     products[(currentIndex + 2) % total],
   ];
 
+  // Simulate API loading
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
   return (
     <div className="w-full max-w-[1170px] mx-auto bg-white my-12 p-8 rounded-lg shadow-sm">
       {/* Carousel Items */}
       <div className="flex justify-center items-center gap-6 py-8">
-        {visibleProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {loading
+          ? [...Array(3)].map((_, i) => <SkeletonCard key={i} />)
+          : visibleProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
       </div>
 
       {/* Dots */}
@@ -94,6 +106,23 @@ const UserAbout = () => {
   );
 };
 
+// ✅ Skeleton Card (same layout + exact placement)
+const SkeletonCard = () => (
+  <div className="w-[250px] p-4 flex flex-col items-center animate-pulse">
+    <div className="bg-gray-200 w-[190px] h-[220px] rounded-md" />
+
+    <div className="mt-4 w-32 h-4 bg-gray-200 rounded" />
+    <div className="mt-2 w-24 h-3 bg-gray-200 rounded" />
+
+    <div className="flex gap-3 mt-3">
+      <div className="w-5 h-5 rounded-full bg-gray-200"></div>
+      <div className="w-5 h-5 rounded-full bg-gray-200"></div>
+      <div className="w-5 h-5 rounded-full bg-gray-200"></div>
+    </div>
+  </div>
+);
+
+// ✅ Real Card
 function ProductCard({ product }) {
   const dispatch = useDispatch();
   const addToWishlist = (item) => dispatch(addToWishlistAction(item));
@@ -103,7 +132,7 @@ function ProductCard({ product }) {
       <div className="relative bg-gray-100 w-[190px] h-[220px] flex items-center justify-center rounded-md shadow">
         <img
           src={product.image}
-          alt="Product"
+          alt={product.name}
           className="w-[190px] h-[220px] object-contain rounded-md"
         />
       </div>
