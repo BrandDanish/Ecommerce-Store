@@ -22,9 +22,23 @@ const OurStory = () => {
       <Header />
       <section className="w-full max-w-[1170px] mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10 min-h-[400px] overflow-hidden">
         {loading ? (
-          <div className="w-full flex justify-center items-center">
-            <Skeleton />
-          </div>
+          Array(2)
+            .fill(0)
+            .map((_, index) => (
+              <div key={index} className="w-[250px] p-4 flex flex-col items-start justify-start animate-pulse">
+                <div className="bg-gray-200 w-full h-[300px]  rounded-lg "></div>
+                <div className="mt-3 h-6 bg-gray-300 rounded w-3/4"></div>
+                <div className="mt-2 h-4 bg-gray-300 rounded w-full"></div>
+                <div className="mt-2 h-4 bg-gray-300 rounded w-2/3"></div>
+                <div className="mt-2 flex gap-1">
+              {Array(5)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i} className="h-4 w-4 bg-gray-300 rounded"></div>
+                ))}
+                </div>
+              </div>
+            ))
         ) : (
           <>
             <div className="flex-1">
@@ -53,13 +67,13 @@ const OurStory = () => {
           </>
         )}
       </section>
-      {!loading && (
+
         <>
           <Feedback />
           <UserAbout />
           <Guaranttee />
         </>
-      )}
+     
       <Footer />
     </>
   );

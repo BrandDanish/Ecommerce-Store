@@ -8,7 +8,7 @@ import { addToCart } from "../../redux/cartSlice";
 import ProductCard from "../product_card/ProductCard";
 
 const RelatedProduct = () => {
-  
+  const [currentIndex, setCurrentIndex] = useState(0);
   return (
     <div className="w-full max-w-[1170px] mx-auto bg-white mt-6 mb-10">
       {/* Header */}
@@ -19,7 +19,10 @@ const RelatedProduct = () => {
           </div>
         </div>
       </div>
-      <ProductCard />
+      <ProductCard 
+        currentIndex={currentIndex}
+        setCurrentIndex={setCurrentIndex}
+      />
     </div>
   );
 };

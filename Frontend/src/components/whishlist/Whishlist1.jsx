@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import ProductCard from "../product_card/ProductCard";
 const Whishlist1 = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   return (
     <div className="min-h-screen flex flex-col relative">
       <main className="flex-grow">
@@ -24,7 +26,10 @@ const Whishlist1 = () => {
               </Link>
             </div>
           </div>
-         <ProductCard/>
+         <ProductCard
+        currentIndex={currentIndex}
+        setCurrentIndex={setCurrentIndex}
+         />
          </div> 
       </main>
     </div>

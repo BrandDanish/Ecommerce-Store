@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist, removeFromWishlist } from "../../redux/wishlistSlice";
 import { addToCart } from "../../redux/cartSlice";
 import { Link } from "react-router-dom";
 import { FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
+import Skeleton from "../skeleton/Skeleton";
 
 const ProductCard = ({currentIndex}) => {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist.items);
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -35,7 +37,10 @@ const ProductCard = ({currentIndex}) => {
 
     fetchProducts();
   }, []);
-  
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
   const total = products.length;
   const VisibleProduct = currentIndex !== undefined
   ? products.slice(currentIndex, currentIndex + 4) // show 4 products for carousel
@@ -43,7 +48,25 @@ const ProductCard = ({currentIndex}) => {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 ">
-      {VisibleProduct.filter(Boolean).map((product) => {
+      {loading ? (
+        Array(4)
+          .fill(0)
+          .map((_, index) =>(
+            <div key={index} className="w-[250px] p-4 flex flex-col items-start justify-start animate-pulse">
+              <div className="bg-gray-200 w-full h-[200px]  rounded-lg "></div>
+              <div className="mt-3 h-4 bg-gray-300 rounded w-3/4"></div>
+              <div className="mt-2 h-4 bg-gray-300 rounded w-1/2"></div>
+              <div className="mt-2 flex gap-1">
+              {Array(5)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i} className="h-4 w-4 bg-gray-300 rounded"></div>
+                ))}
+                </div>
+            </div>
+          ))
+      ) :(
+         VisibleProduct.filter(Boolean).map((product) => {
         const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
         return (
@@ -127,7 +150,7 @@ const ProductCard = ({currentIndex}) => {
             </div>
           </div>
         );
-      })}
+      }))}
     </div>
   );
 };

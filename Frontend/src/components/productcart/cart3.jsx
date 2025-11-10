@@ -7,7 +7,7 @@ import { addToWishlist } from "../../redux/wishlistSlice";
 import ProductCard from "../product_card/ProductCard";
 
 const SellingProduct = () => {
-  // ✅ only one ope
+   const[currentIndex, setCurrentIndex] = useState(0);
   return (
     <div className="container mx-auto bg-white mt-6 mb-10 p-6">
       {/* Header */}
@@ -26,8 +26,10 @@ const SellingProduct = () => {
           </Link>
         </div>
       </div>
-      <ProductCard 
-      />
+      <ProductCard
+        currentIndex={currentIndex}
+        setCurrentIndex={setCurrentIndex} 
+         />
     </div>
   );
 };
